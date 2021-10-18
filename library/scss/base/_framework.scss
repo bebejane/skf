@@ -1,0 +1,95 @@
+.margin-wrapper {
+	max-width: 1440px;
+	margin: auto;
+}
+
+.outer-container {
+	display:flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	//background-image: url('../images/grid.gif');
+	background-position: center;
+	background-repeat-x: no-repeat;
+	background-size: 100%;
+	@include outerMargins();
+
+}
+
+.logged-in-container {
+	@include mq($from: desktop) {
+		margin-left: spanGridWithGutter(2);
+	}
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.container {
+	width: 100%;
+	position: relative;
+	min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+	main {
+		@include mq($from: desktop) {
+			margin-left: spanGridWithGutter(2);
+		}
+		display: flex;
+		flex-wrap: wrap;
+
+		.single & {
+			//justify-content: space-between;
+		}
+
+		h1 {
+			@include mq($from: desktop) {
+			width: spanNestedGrid(12,10);
+			}
+		}
+
+		body.private & {
+			display: none;
+		}
+
+	}
+}
+
+.thick-line {
+	border-top: 5px solid;
+}
+
+.mobile-hide {
+	@include mq($from: mobile, $until: tablet) {
+		display: none;
+	}
+}
+
+.email {
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+	display: block;
+}
+
+
+element.style {
+}
+
+#cn-notice-text {
+	@include mq($until: desktop) {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+}
+
+.cn-close-icon {
+	@include mq($until: desktop) {
+		top: 25px;
+	}
+}
+
+#cookie-notice .cn-button {
+	@include mq($until: desktop) {
+		margin-top: 1em;
+	}
+}

@@ -1,0 +1,78 @@
+// GRID
+$columns: 14;
+$gutter: 1.7%;
+$column-width: ((100% - (($columns - 1) * $gutter)) / $columns);
+
+
+// WIDTH OF UNITS IN GRID WITHOUT LAST GUTTER
+@function spanGrid($amount) {
+  @return $column-width * $amount + $gutter * ($amount - 1);
+}
+
+$totalWidth12cols: spanGrid(12);
+$difference12: $totalWidth12cols / 100%;
+$gutter-nested: $gutter / $difference12; //Denna ska göras om
+
+
+// WIDTH OF UNITS IN GRID WITH  LAST GUTTER
+@function spanGridWithGutter($amount) {
+  @return $column-width * $amount + $gutter * $amount;
+}
+
+@function spanNestedGrid($container, $element) {
+  $totalWidth: spanGrid($container);
+  $nestedWidth: (($totalWidth - (($container - 1) * $gutter)) / $container);
+  $difference: $totalWidth / 100%;
+  @return ($nestedWidth * $element + $gutter * ($element - 1)) / $difference;
+}
+
+//@function spanNestedGrid($container, $element) {
+  //$temp: 100% / spanGrid($container);
+  //@return $temp * spanGrid($element);
+//}
+
+@function nestedGridGutter($container) {
+  $temp: 100% / spanGrid($container);
+  @return $temp * $gutter;
+}
+
+
+
+
+@mixin three-column-thumb-container() {
+  @include outerMargins();
+  justify-content: center;
+  display: flex;
+  flex-flow: row wrap;
+
+  @include mq($from: mobile, $until: desktop) {
+    .calendar-thumb:last-child {
+      display: none;
+    }
+  }
+}
+
+@mixin three-column-thumb() {
+  text-align: center;
+
+  width: spanGrid(4);
+  margin-right: $gutter;
+
+  @include mq($from: mobile, $until: desktop) {
+    @include resetLastColumn(2);
+  }
+
+  @include mq($from: desktop) {
+    @include resetLastColumn(3);
+    width: spanGrid(2);
+  }
+
+  img {
+    height: 100%;
+  }
+
+  .text {
+    text-align: left;
+  }
+
+}

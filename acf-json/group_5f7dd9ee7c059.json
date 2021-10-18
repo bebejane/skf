@@ -1,0 +1,110 @@
+{
+    "key": "group_5f7dd9ee7c059",
+    "title": "Utseende",
+    "fields": [
+        {
+            "key": "field_5fa13c4f0493f",
+            "label": "Tips",
+            "name": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Om du känner dig osäker på något så finns det hjälp på <a href=\"http:\/\/manual.konstforeningar.se\" target=\"new\">manual.konstforeningar.se<\/a>",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_5f843a8462d7d",
+            "label": "Logotyp",
+            "name": "logo",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": 200,
+            "min_height": 200,
+            "min_size": "",
+            "max_width": 2000,
+            "max_height": 2000,
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_5f7dd9fecf57a",
+            "label": "Bakgrundsfärg",
+            "name": "bg_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": ""
+        },
+        {
+            "key": "field_5f842335f39ed",
+            "label": "Färg på rubriker",
+            "name": "headline_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": ""
+        },
+        {
+            "key": "field_5f8429f5729fe",
+            "label": "Färg på ram",
+            "name": "frame_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "theme-general-settings"
+            }
+        ]
+    ],
+    "menu_order": -1,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1624885218
+}

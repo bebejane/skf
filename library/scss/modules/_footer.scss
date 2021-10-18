@@ -1,0 +1,91 @@
+footer {
+  width: 100%;
+  display: flex;
+  flex-grow: 1;
+  justify-content: end;
+  flex-direction: column-reverse;
+
+  @include mq($from: desktop) {
+    padding-left: spanGridWithGutter(2);
+  }
+
+  padding-top: $space * 1.5;
+
+  @include mq($from: tablet) {
+    padding-top: $space * 2;
+  }
+
+  //Undantag för space mot footer
+  body.home &, body.archive &,
+  body.page-template-page-latest-activities &,
+  body.page-template-page-latest-exhibitions &,
+  body.page-template-page-latest-lotteries &,
+  body.page-virveln-arkiv &,
+  {
+    padding-top: 0;
+  }
+
+  section {
+    padding-top: $space;
+    padding-bottom: $space !important;
+    display: flex;
+    flex-wrap: wrap;
+
+    @include mq($until: tablet) {
+      padding-bottom: $space / 2 !important;
+    }
+  }
+  
+  div {
+    &:nth-child(-n+2){
+        p {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+
+    @include mq($until: desktop) {
+      &:nth-child(-n+4){
+        width:50%;
+        padding-right: 10px;
+      }
+
+
+      &:nth-child(3){
+        a {
+          padding-right: .2em;
+        }
+      }
+
+    }
+
+    @include mq($from: desktop) {
+      width: spanNestedGrid(12,3);
+      margin-right: $gutter-nested;
+      @include resetLastColumn(4);
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+  }
+
+  div.last-line {
+    @include mq($from: tablet) {
+      width: spanNestedGrid(12,9);
+    }
+  }
+
+  p a {
+    border-bottom: none;
+
+    &:hover {
+      border-bottom: 1px solid;
+    }
+  }
+
+
+}

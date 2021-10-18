@@ -1,0 +1,70 @@
+{
+    "key": "group_60d9c9d4ce143",
+    "title": "Utskick",
+    "fields": [
+        {
+            "key": "field_60d9ca01729d6",
+            "label": "E-mail adresser",
+            "name": "recipients",
+            "type": "textarea",
+            "instructions": "Copy paste lista har",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Kopiera komma separerad lista av e-mail adresser....",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_60d9edcc6ddf6",
+            "label": "Meddelande",
+            "name": "message",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "newsletter"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "permalink",
+        "discussion",
+        "comments",
+        "slug",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "",
+    "modified": 1630070752
+}

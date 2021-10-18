@@ -1,0 +1,38 @@
+// MARGINS & SPACES
+$outer-margin: 3.7%;
+$space: 20px;
+
+// SET OUTER MARGINS ON SECTION
+@mixin outerMargins() {
+  padding-left: $outer-margin * 0.8;
+  padding-right: $outer-margin * 0.8;
+
+  @include mq($from: tablet) {
+    padding-left: $outer-margin;
+    padding-right: $outer-margin;
+  }
+}
+
+@mixin space($amount, $where) {
+  #{$where}: $space * $amount;
+}
+
+
+$v-space: 40px;
+$h-space: $v-space;
+$opactity: 0.7;
+
+@mixin horMargins() {
+  padding-top: $h-space * 0.7;
+  padding-bottom: $h-space * 0.8;
+}
+
+
+//kanske ta bort
+@mixin horMarginBottom() {
+  padding-bottom: $h-space * 0.8;
+
+  @include mq($from: tablet) {
+    padding-bottom: $h-space;
+  }
+}

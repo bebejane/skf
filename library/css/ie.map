@@ -1,0 +1,12 @@
+{
+	"version": 3,
+	"file": "../scss/ie.css",
+	"sources": [
+		"../scss/ie.scss"
+	],
+	"sourcesContent": [
+		"/******************************************************************\nSite Name:\nAuthor:\n\nStylesheet: IE Stylesheet\n\nSo instead of using the respond.js file to add media query support\nto IE, we're going to use SASS to create an easily readable css file.\nHere, we import all the styles the standard stylesheet gets, only\nwithout the media queries. No need to worry about editing anything!\n\n******************************************************************/\n\n\n/******************************************************************\nIMPORTS & DEPENDENCIES\nRemember, all the BASE styles are called already since IE can\nread those. Below, we need to import only the stuff IE can't\nunderstand (what's inside the media queries). We also need to\nimport the mixins file so SASS can understand the variables.\n******************************************************************/\n\n//@import \"partials/variables\"; // import variables\n//@import \"partials/typography\"; // import typography\n//@import \"partials/mixins\"; // import mixins\n\n\n/*\nyou can call the larger styles if you want, but there's really no need\n*/\n\n\n/******************************************************************\nADDITIONAL IE FIXES\nThese fixes are now ONLY seen by IE, so you don't have to worry\nabout using prefixes, although it's best practice. For more info\non using Modernizr classes, check out this link:\nhttp://www.modernizr.com/docs/\n******************************************************************/\n\n/*\nFor example, you can use something like:\n\n.no-textshadow .class { ... }\n\nYou can also target specific versions by using the classes applied to\nthe html element. These can sometimes change, so take a look inside the\nheader.php file to see what they are:\n\n\n.lt-ie8 .class { ... }\n\n*/\n"
+	],
+	"mappings": "AAAA;;;;;;;;;;;mEAWmE;AAGnE;;;;;;mEAMmE;AAOnE;;EAEE;AAGF;;;;;;mEAMmE;AAEnE;;;;;;;;;;;;EAYE",
+	"names": []
+}

@@ -1,0 +1,186 @@
+nav.top {
+	display: flex;
+	justify-content: space-between;
+	z-index: 100;
+	@include space(1.5, 'padding-bottom');
+
+	@include mq($from: desktop) {
+		@include space(1.2, 'padding-top');
+		@include space(1.7, 'padding-bottom');
+	}
+
+	div.top-wrapper {
+		width: spanGrid(14);
+		display: flex;
+		justify-content: space-between;
+		position: relative;
+		@include mq($from: tablet, $until: desktop) {
+			padding-top: $space;
+		}
+		@include mq($until: desktop) {
+			flex-wrap: wrap;
+		}
+	}
+
+	ul {
+		list-style: none;
+		display: flex;
+		@include space(1.5, 'padding-top');
+
+		@include mq($from: tablet) {
+			@include space(1.2, 'padding-top');
+		}
+	}
+
+	.menu {
+		
+		@include mq($until: desktop) {
+			z-index: 100;
+			display: none;
+			margin-left: spanGridWithGutter(2);
+			position: absolute;
+			padding-top: $space * 4.5;
+
+				li {
+					padding-bottom: .2em;
+				}
+
+				a {
+					border-bottom: none;
+				}
+			}
+
+		@include mq($from: tablet, $until: desktop) {
+			margin-top: $space * 2;
+		}
+
+		@include mq($from: desktop) {
+			li {
+				padding-left: .75em;
+
+			}
+		}
+
+	}
+
+	.breadcrumb {
+		flex: 1;
+
+		li {
+		&:not(:last-child):after {
+			content: "›";
+			padding-right: .25em;
+			padding-left: .25em;
+			font-weight: bold;
+		}
+		}
+	}
+
+	.menu-header, .breadcrumb {
+		margin-left: 20%;
+
+		@include mq($from: tablet) {
+			margin-left: spanGridWithGutter(2);
+		}
+	}
+
+	.menu-header {
+		display: none;
+	}
+}
+
+
+nav.logo{
+	position: absolute;
+	z-index: 101;
+	padding-top: $space / 2;
+	max-width: 60px;
+	height: 70px;
+
+	@include mq($from: tablet) {
+		width: 11.5vw;
+		max-width: 170px;
+		height: 110px;
+	}
+
+	@include mq($from: desktop) {
+		position: fixed;
+	}
+
+	figure {
+		display: flex;
+		height: 100%;
+
+		img {
+			object-fit: contain;
+	    object-position: left;
+		}
+	}
+}
+
+button.hamburger {
+	z-index: 1000;
+	cursor: pointer;
+  position: fixed;
+  right: 0;
+  top: 14px;
+  z-index: 10000;
+  padding-left: 1em;
+	padding-right: 3.7vw;
+	
+	@include mq($from: tablet) {
+		padding-top: 0px;
+	}
+
+	@include mq($from: desktop) {
+	display: none;
+	}
+
+	h1.cross {
+		display: none;
+	}
+}
+
+body.open-nav {
+
+	.container {
+		display: block;
+	}
+
+	main {
+		display: none;
+	}
+
+	footer, main, .breadcrumb, {
+		opacity: 0;
+	}
+
+	.menu-header {
+		display: block;
+		opacity: 1 !important;
+	}
+
+	nav.main {
+		display: flex;
+	}
+
+	.menu {
+		display: block;
+	}
+
+	nav.top {
+		@include mq($until: desktop) {
+			padding-bottom: 1 * $space;
+		}
+	}
+
+	.hamburger h1 {
+		&.cross {
+			display: block;
+		}
+		&.burger {
+			display: none;
+		}
+	}
+
+}

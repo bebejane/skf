@@ -1,0 +1,145 @@
+{
+    "key": "group_60b5d27dd22d0",
+    "title": "Inställningar för startsida",
+    "fields": [
+        {
+            "key": "field_60b5d2984229b",
+            "label": "Jag vill själv välja vilka inlägg som ska visas med stora bilder",
+            "name": "manual_selection",
+            "type": "true_false",
+            "instructions": "Om du väljer nej här kommer automatiskt de 3 senaste inläggen att visas istället",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_60b5d5e2540a5",
+            "label": "Inlägg på startsidan",
+            "name": "big_image",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_60b5d2984229b",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 5,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_60b5d614540a6",
+                    "label": "Inlägg",
+                    "name": "post_id",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "post_type": [
+                        "news",
+                        "lotteries",
+                        "activities",
+                        "exhibitions"
+                    ],
+                    "taxonomy": "",
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "return_format": "id",
+                    "ui": 1
+                }
+            ]
+        },
+        {
+            "key": "field_60b5f99bd30a4",
+            "label": "Visa introduktionstext",
+            "name": "start_intro",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_60b5f9ecd30a5",
+            "label": "Introduktions text",
+            "name": "start_intro_text",
+            "type": "textarea",
+            "instructions": "Använd denna text om du vill kort berätta om din konstförening som en introduktion till besökaren. Det kommer se finast ut om texten inte är för lång eller för kort. Optimalt är ca två meningar.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_60b5f99bd30a4",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "page-start.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "modified": 1624885280
+}

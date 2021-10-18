@@ -1,0 +1,98 @@
+/*! Made with Bones: http://themble.com/bones :) */
+
+/******************************************************************
+Site Name:
+Author:
+
+Stylesheet: Main Stylesheet
+
+Here's where the magic happens. Here, you'll see we are calling in
+the separate media queries. The base mobile goes outside any query
+and is called at the beginning, after that we call the rest
+of the styles inside media queries.
+
+Helpful articles on Sass file organization:
+http://thesassway.com/advanced/modular-css-naming-conventions
+
+******************************************************************/
+
+/*********************
+IMPORTING PARTIALS
+These files are needed at the beginning so that we establish all
+our mixins, functions, and variables that we'll be using across
+the whole project.
+*********************/
+
+// normalize: http://necolas.github.io/normalize.css/
+// import mixins
+@import "partials/mediaqueries";
+
+@import "partials/variables";
+
+@import "partials/grid";
+
+@import "partials/fonts";
+
+@import "partials/mixins";
+
+@import "partials/functions";
+
+@import "partials/normalize";
+
+@import "partials/margins";
+
+@import "partials/typography";
+
+/*********************
+IMPORTING MODULES
+Modules are reusable blocks or elements we use throughout the project.
+We can break them up as much as we want or just keep them all in one.
+I mean, you can do whatever you want. The world is your oyster. Unless
+you hate oysters, then the world is your peanut butter & jelly sandwich.
+*********************/
+
+@import "modules/content";
+
+@import "modules/forms";
+
+@import "modules/header";
+
+@import "modules/footer";
+
+@import "modules/menu";
+
+@import "modules/thumbs";
+
+@import "modules/swiper";
+
+@import "modules/fullscreen";
+
+
+// pages
+@import "pages/start";
+
+
+/*********************
+BASE (MOBILE) SIZE
+This are the mobile styles. It's what people see on their phones. If
+you set a great foundation, you won't need to add too many styles in
+the other stylesheets. Remember, keep it light: Speed is Important.
+*********************/
+
+// styles in base.scss
+@import "base/base";
+@import "base/framework";
+
+
+/*********************
+PRINT STYLESHEET
+Feel free to customize this. Remember to add things that won't make
+sense to print at the bottom. Things like nav, ads, and forms should
+be set to display none.
+*********************/
+@media print {
+
+	// styles in print.scss
+	@import "partials/print";
+
+}

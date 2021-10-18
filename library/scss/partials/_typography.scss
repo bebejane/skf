@@ -1,0 +1,184 @@
+
+$headline-size:         72px;
+$headline-size-mid:     60px;
+
+$mid-size:              16px;
+$small-size:            13px;
+$intro-size:            23px;
+$body-size:             20px;
+$nav-size:              18px;
+
+$line-height:           1.45em;
+$line-height-headline:  1em;
+
+
+h1, body.open-nav nav .menu li {
+  font-size: $headline-size * 0.7;
+  font-family: $headline-font;
+  line-height: $line-height-headline;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  transition: color .3s ease-out;
+
+  @include mq($from: tablet) {
+    font-size: $headline-size;
+  }
+
+  main &, .logged-in-container & {
+    @include space(1, 'padding-bottom');
+  }
+
+  &.icon {
+    font-family: $icon-font;
+    text-transform: none;
+  }
+
+  .logo & {
+    font-size: $headline-size * 0.75;
+    @include mq($from: tablet) {
+      font-size: $headline-size * 1.1;
+    }
+  }
+}
+
+h2 {
+  font-family: $headline-font;
+  font-size: $headline-size-mid * 0.7;
+  line-height: $line-height-headline;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  text-transform: uppercase;
+  @include mq($from: tablet) {
+    font-size: $headline-size-mid;
+  }
+
+  .single main &, .page main & {
+    @include space(1.5, 'padding-top');
+    @include space(1, 'padding-bottom');
+  }
+}
+
+h3 {
+  font-weight: 600;
+  font-family: $body-font;
+  font-size: $body-size;
+  line-height: $line-height;
+  @include space(1.5, 'padding-top');
+  @include space(.5, 'padding-bottom');
+}
+
+//Kolla upp detta!
+
+h4 {
+  font-size: $body-size;
+  font-family: $body-font;
+  line-height: 1.2;
+  font-weight: 600;
+  padding-bottom: .5em;
+}
+
+h5 {
+  font-size: $small-size;
+  font-weight: 400;
+  padding-bottom: .5em;
+}
+
+h6 {
+  font-weight: 400;
+  font-size: $mid-size;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+nav.top {
+  font-size: $nav-size;
+}
+
+strong, .strong {
+  font-weight: 600;
+  font-family: $body-font;
+}
+
+p strong {
+  //display:inline-block;
+}
+
+em, i {
+  font-weight: 400;
+  font-style: italic;
+  font-stretch: normal;
+}
+
+
+p, li, .normal, blockquote, section.text {
+  line-height: $line-height;
+  font-size: $body-size * .8;
+
+  @include mq($from: tablet) {
+    font-size: $body-size;
+  }
+}
+
+.intro p, p.intro, .intro {
+  font-size: $intro-size * .8;
+  line-height: $line-height;
+
+  @include mq($from: tablet) {
+    font-size: $intro-size;
+  }
+}
+
+.small, p.small {
+  font-size: $small-size * 0.8;
+  line-height: $line-height;
+
+  @include mq($from: tablet) {
+    font-size: $small-size;
+  }
+}
+
+.mid, p.mid, .mid p {
+    font-size: $mid-size;
+}
+
+span.icon, div.icon {
+  font-family: $icon-font;
+}
+
+footer .mid {
+  font-size: $mid-size * 0.9;
+
+  @include mq($from: tablet) {
+    font-size: $mid-size;
+  }
+}
+
+.related .icon {
+  font-size: 22px;
+
+  @include mq($from: tablet) {
+    font-size: 28px;
+  }
+}
+
+
+element.style {
+    background-color: rgba(0,0,0,1);
+}
+
+#cookie-notice {
+  font-family: $body-font;
+  font-size: $small-size;
+  background-color: $black;
+
+  .cn-text-container {
+      margin: 0;
+  }
+  .cn-button {
+    background: $dark-gray;
+  }
+
+}

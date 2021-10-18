@@ -1,0 +1,484 @@
+div.left {
+	width: 100%;
+	@include mq($from: desktop) {
+		width: spanNestedGrid(12,8);
+		padding-right: $gutter;
+	}
+
+	&+aside {
+		@include mq($until: desktop) {
+			padding-bottom: $space;
+		}
+	}
+}
+
+div.right {
+	width: 100%;
+	@include mq($from: desktop) {
+		margin-bottom: $space;
+		width: spanNestedGrid(12,4) + $gutter-nested;
+		padding-left: $gutter * 2;
+	}
+
+	aside:not(:last-of-type) {
+		padding-bottom: $space;
+	}
+
+}
+
+section.text {
+	ul {
+		list-style: none;
+		list-style-type: none !important;
+		padding-left: 2em;
+		padding-bottom: 1.5em;
+
+		li {
+			text-indent: 1.2em;
+			@include mq($from: tablet) {
+				text-indent: .8em;
+			}
+		}
+
+		li:before {
+			content: "\25AA";
+			font-family: $icon-font;
+			display: inline-block;
+			width: 2em;
+			margin-left: -2.7em;
+			font-size: $body-size;
+			@include mq($from: tablet) {
+				//font-size: $body-size;
+			}
+		}
+
+		& + h3, & + h2 {
+			padding-top: 0;
+		}
+
+		h3 {
+			padding-top: 10px;
+		}
+	}
+
+	&>h3 {
+		padding-top: 0;
+	}
+
+}
+
+// Ev ta bort
+section.schedule {
+	table {
+		width: 100%;
+
+		td:first-of-type {
+			font-variant-numeric: tabular-nums;
+			width: spanNestedGrid(7.8, 2);
+		}
+
+		td {
+			padding-bottom: 0.2em;
+		}
+
+	}
+}
+
+figure.content-image {
+	padding-top: $space / 2;
+
+	&.right {
+		@include mq($until: desktop) {
+			padding-bottom: 1em;
+		}
+		@include mq($from: desktop) {
+			width: spanNestedGrid(12,4) + $gutter-nested;
+			padding-left: $gutter * 2;
+			position: initial;
+			padding-bottom: $space * 2;
+		}
+
+		&.absolute div.wrap {
+			@include mq($from: desktop) {
+				position: absolute;
+			}
+		}
+
+		.wrap {
+			@include mq($until: desktop) {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+
+				&.has-caption img {
+					width: spanNestedGrid(12,8);
+				}
+
+				&.has-caption .caption{
+					padding-top: 0;
+					width: spanNestedGrid(12,4);
+					padding-left: $gutter + spanNestedGrid(12,.2); ;
+				}
+			}
+		}
+
+		img {
+			align-self: flex-start;
+			width: 100%;
+		}
+		.caption {
+			padding-top: 1em;
+		}
+	}
+
+	&.body, &.full {
+		width: 100%;
+
+		@include mq($from: tablet) {
+			padding-top: $space;
+			padding-bottom: 2 * $space;
+		}
+	}
+
+	&.full {
+		.caption {
+			padding-top: 1em;
+		}
+	}
+
+	&.portait img {
+		width: auto;
+		max-height: 50vh;
+	}
+
+	&.body {
+
+		.wrap{
+			display: flex;
+			justify-content: space-between;
+		}
+
+		img {
+			align-self: flex-start;
+		}
+		}
+
+	.caption {
+		padding-top: $space;
+		padding-bottom: $space;
+	}
+
+}
+
+.single-gallery {
+	.content-image {
+		display: none;
+	}
+}
+
+section.gallery {
+	padding-bottom: $space;
+
+	figure {
+		@include aspect-ratio(6,4);
+		display: flex;
+		margin-bottom: $space;
+		background: black;
+
+
+		.content {
+			display: flex;
+		}
+
+		img {
+					object-fit: contain !important;
+					object-position: center center;
+		}
+
+		.caption {
+			display: none;
+		}
+
+	}
+
+	.swiper-footer {
+		position: relative;
+
+		.caption {
+			padding-top: $space;
+			padding-bottom: $space;
+			text-align: center;
+		}
+
+		.swiper-button-next, .swiper-button-prev {
+			top: 26px !important
+			}
+
+		.swiper-button-prev {
+			left: 0;
+			right: auto !important;
+		}
+
+	}
+}
+
+// Ev ta bort
+aside.related {
+	& > ul, form {
+		border: $image-border;
+		padding: $space;
+		padding-left: $space * 0.9;
+		list-style: none;
+
+		li {
+			text-indent: 0 !important;
+			&:not(:last-child) {
+				padding-bottom: 0.5em;
+			}
+
+			span.icon {
+				position: absolute;
+				@supports (-ms-ime-align: auto) {
+					margin-top: -4px;
+				}
+			}
+			span.link {
+				display: inline-block;
+				padding-left: 1em;
+			}
+		}
+	}
+}
+
+// Ev ta bort
+ul.collaborators {
+	width: 100%;
+	display: flex;
+	list-style: none;
+	@include space(2, 'padding-bottom');
+
+	a {
+		border-bottom: 0px solid !important;
+	}
+
+	li {
+		padding-right: $gutter-nested;
+
+		img{
+			max-height: 50px;
+			width: auto;
+		}
+	}
+
+}
+
+aside.event {
+	position: relative;
+	//align-self: flex-end;
+
+	&.absolute div {
+		position: absolute;
+	}
+
+	h5 {
+		padding-top: .5em;
+	}
+
+	div {
+	border: $image-border;
+	padding: $space;
+
+		h5 {
+			padding-top: 0;
+			padding-bottom: .2em;
+		}
+
+		p:last-of-type {
+			margin-bottom: 0.2em;
+		}
+
+	}
+}
+
+ul.people {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	list-style: none;
+
+	figure {
+	@include aspect-ratio(10, 6);
+	background: $mid-gray;
+	background-size: cover;
+
+	.content {
+		display: flex;
+
+		img {
+			object-fit: cover;
+			}
+		}
+	}
+
+	li {
+		width: 100%;
+
+		@include mq($from: tablet, $until: desktop) {
+			width: spanNestedGrid(12,6);
+			margin-right: $gutter-nested;
+			@include resetLastColumn(2);
+		}
+
+		@include mq($from: desktop) {
+			width: spanNestedGrid(12,4);
+			margin-right: $gutter-nested;
+			@include resetLastColumn(3);
+		}
+
+		padding-bottom: 1em;
+
+		p {
+			margin-bottom: 0;
+
+			&:first-of-type {
+				padding-top: 1em;
+			}
+		}
+	}
+
+}
+
+section.video {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	padding-top: $space / 2;
+	padding-bottom: $space;
+
+	@include mq($from: tablet) {
+		padding-top: $space;
+		padding-bottom: 2 * $space;
+	}
+
+	.video-wrapper {
+		width: 100%;
+	}
+
+	.caption {
+				padding-top: 1em;
+
+			h3 {
+				padding-top: 0;
+			}
+	}
+
+	.video-responsive{
+	    overflow:hidden;
+	    padding-bottom:56.25%;
+	    position:relative;
+	    height:0;
+
+		iframe{
+	    left:0;
+	    top:0;
+	    height:100%;
+	    width:100%;
+	    position:absolute;
+		}
+	}
+}
+
+
+
+section.artworks {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	flex-wrap: wrap;
+
+	.artwork {
+		width: spanNestedGrid(12,6);
+		padding-bottom: $space;
+
+
+			p {
+			margin: 0;
+		}
+
+		figure {
+			@include aspect-ratio(4,3);
+			display: flex;
+			margin-bottom: $space;
+
+			.content {
+				display: flex;
+			}
+
+					img {
+				    object-fit: contain !important;
+				    object-position: left bottom;
+						cursor: pointer;
+				  }
+		}
+
+		.artwork-meta {
+			span:not(:last-child):after {
+				content: ", ";
+			}
+
+			a {
+				border-bottom: 1px solid transparent;
+				&:hover {
+					border-bottom: 1px solid $black;
+				}
+			}
+
+		}
+
+
+
+	}
+}
+
+.single-gallery {
+	span.by {
+		display: none;
+	}
+}
+
+div.meta {
+	width: 100%;
+	padding-bottom: $space / 2;
+}
+
+section.map {
+	width: 100%;
+	@include space(1,'padding-top');
+	@include space(2,'padding-bottom');
+}
+
+//Fix for right aligned images on mobile-hide
+@include mq($until: tablet) {
+	.single, .page {
+		main {
+
+			h1:first-of-type {
+				order: -4;
+			}
+			div.meta {
+				order: -3;
+			}
+			section:first-of-type {
+				order: -2;
+			}
+
+			figure.right {
+				order: -1;
+			}
+
+
+		}
+
+	}
+
+}

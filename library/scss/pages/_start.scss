@@ -1,0 +1,260 @@
+body.district-pages-template-page-district-home {
+  section:not(:last-child) {
+    @include space(2,'padding-bottom');
+  }
+}
+
+body.home {
+  .breadcrumb {
+    li:last-of-type {
+      display: none;
+    }
+    li:first-of-type {
+      &:after {
+        content: "";
+      }
+    }
+  }
+
+  .logo h1 {
+    color: $black !important;
+    animation: none;
+    max-width: 80vw;
+    font-size: $headline-size * 0.7;
+    @include mq($from: tablet) {
+      font-size: $headline-size * 1;
+    }
+
+    &.only-logo {
+      font-size: $headline-size * 0.75;
+      @include mq($from: tablet) {
+        font-size: $headline-size * 1.1;
+      }
+    }
+  }
+
+  .desc {
+    @include space(1.2,'padding-bottom');
+    @include space(1.2,'padding-top');
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    @include space(1,'margin-bottom');
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .intro {
+      @include mq($from: tablet) {
+      width: spanNestedGrid(12,9);
+      }
+      margin: 0;
+    }
+
+    a {
+      border-bottom: none;
+    }
+
+    .mid {
+        margin-bottom: 0;
+        a {
+          display: inline-block;
+          padding-bottom: 0.2em;
+        }
+
+      @include mq($until: tablet) {
+        padding-top: 1em;
+        margin-bottom: 0;
+        display: flex;
+        br {
+          display: none;
+        }
+        a:nth-of-type(2) {
+          padding-left: 0.5em;
+        }
+      }
+      @include mq($from: tablet) {
+        padding-left: 1em;
+        margin-left: 1em;
+        border-left: 1px solid;
+      }
+    }
+
+  }
+
+
+}
+
+section.big-image {
+  width: 100%;
+  border-bottom: 1px solid;
+  @include space(2,'padding-bottom');
+  @include space(2,'margin-bottom');
+
+  @include mq($until: desktop) {
+    margin-bottom: $space;
+  }
+
+  @include mq($from: desktop) {
+    padding-top: $space;
+  }
+
+  a:hover {
+    border-bottom: 0px !important;
+  }
+
+  h1 {
+    padding-bottom: 10px;
+  }
+
+  article {
+    display: flex;
+    width: 100%;
+    @include mq($until: desktop) {
+      flex-wrap: wrap;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  h5 {
+    padding-top: 1em;
+  }
+
+  span.post-type {
+    display: inline;
+  }
+
+  figure {
+    width: 100%;
+    border: $image-border;
+
+    @include mq($from: desktop) {
+      width: spanNestedGrid(12,7);
+    }
+
+    @include aspect-ratio(16, 10);
+
+    .content {
+      display: flex;
+      img {
+        object-fit: cover;
+      }
+    }
+  }
+
+  div.text {
+    @include mq($from: desktop) {
+      width: spanNestedGrid(12,5);
+      padding-left: $gutter * 2;
+    }
+
+    h5 {
+      @include mq($from: tablet) {
+        @include space(1,'padding-bottom');
+      }
+    }
+
+  }
+
+}
+
+section.shortcuts {
+  width: 100%;
+  padding-bottom: $space;
+
+  ul {
+    list-style: none;
+    column-count: 2;
+    @include mq($from: desktop) {
+      column-count: 1;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  h3 {
+    padding: 0;
+  }
+}
+
+section.start-headline {
+  width: 100%;
+  display: flex;
+  border-top: 1px solid;
+  justify-content: space-between;
+  @include space(1.5,'padding-top');
+  @include space(1.2,'padding-bottom');
+
+  &.center {
+    justify-content: center;
+  }
+
+  &.even {
+    justify-content: space-evenly;
+  }
+
+  &.tight {
+    @include space(.5,'padding-bottom');
+  }
+
+  a {
+    border-bottom: 1px solid transparent !important;
+
+    &:hover {
+      border-bottom: 1px solid  !important;
+    }
+  }
+
+  body.single-projects & {
+    margin-top: $space * 2;
+  }
+
+}
+
+body.page-template-page-swirl-start {
+  .desc {
+    display: flex;
+    @include mq($until: tablet) {
+      flex-wrap: wrap;
+      .intro {
+        width: 100%;
+      }
+    }
+
+    a {
+      border-bottom: none;
+      &:hover {
+        border-bottom: 1px solid;
+      }
+    }
+
+    h1 {
+      width: auto;
+      padding-right: .5em;
+    }
+    p {
+      padding-right: spanNestedGrid(12,1);
+    }
+  }
+
+  .big-image {
+    @include space(2, 'padding-top');
+    border-top: 1px solid;
+
+    .swiper-button-next, .swiper-button-prev {
+      padding-top: 65px;
+    }
+  }
+
+  .thumbs.four .thumb  {
+    figure {
+    display: flex;
+    }
+    h5 {
+      padding-top: 1.2em;
+    }
+  }
+
+}
