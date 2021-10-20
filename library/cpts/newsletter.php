@@ -124,8 +124,7 @@ class SKFCptNewsletter
 
 		if ( 'newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
-		}
-		
+		}		
 		$fields = get_fields($post->ID);
 		$subject = $post->post_title;
 		$message = get_field('message', $post->ID);
@@ -136,10 +135,11 @@ class SKFCptNewsletter
 			$this->send_notice('error', 'Alla fält ar ej ifyllda!');
 			return;
 		}
-		$success = $this->send_email($recipients, $subject, $message, $fields);
+		$success = $this->send_email($recipients, $subject, $message, $fields, $post);
+
 	}
 	
-	public function send_email($recipients, $subject, $message, $fields)
+	public function send_email($recipients, $subject, $message, $fields, $post)
 	{	
 		$from_email = get_field('newsletter_from_email','option');
 		$from_name = get_field('newsletter_from_name','option');
@@ -160,12 +160,12 @@ class SKFCptNewsletter
 			$bcc[$recipients[$i]] = '';
 		}
 		
-		$html = $this->generate_from_template('newsletter', $subject, $fields);
-
+		
 		//$from_name = 'Sverges Konstforeningar';
 		//$from_email = 'info@svergeskonstforeningar.nu';
-		
-		DEBUG($fields);
+
+		$html = file_get_contents(get_permalink($post));
+		//$html = $this->generate_from_template('newsletter', $subject, $fields, $post);
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
@@ -227,8 +227,10 @@ class SKFCptNewsletter
 		delete_transient( get_current_user_id().'newsletter-' . $type );
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
 	}
-	private function generate_from_template($template, $subject, $fields)
+	private function generate_from_template($template, $subject, $fields, $post_id)
 	{
+
+		/*
 		$fileName = get_template_directory() . '/library/email/' . $template . '.html';
 		$html = file_get_contents($fileName);
 		$fields['subject'] = $subject;
@@ -237,6 +239,9 @@ class SKFCptNewsletter
 			$tag = '{{' . $key . '}}';
 			$html = str_replace($tag, $fields[$key], $html);
 		}
+		*/
+		$html = file_get_contents(get_permalink($post));
+
 		return $html;
 	}
 }

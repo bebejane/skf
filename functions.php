@@ -47,7 +47,7 @@ function bones_ahoy()
 	//add_action( 'widgets_init', 'bones_register_sidebars' );
 
 	// cleaning up random code around images
-	add_filter("the_content", "bones_filter_ptags_on_images");
+	//add_filter("the_content", "bones_filter_ptags_on_images");
 	// cleaning up excerpt
 	add_filter("excerpt_more", "bones_excerpt_more");
 
@@ -123,7 +123,7 @@ new image size.
 remove_filter("term_description", "wpautop");
 
 // Ta bort länkar kring bilder
-add_filter("the_content", "attachment_image_link_remove_filter");
+//add_filter("the_content", "attachment_image_link_remove_filter");
 function attachment_image_link_remove_filter($content)
 {
 	$content = preg_replace(["{<a(.*?)(wp-att|wp-content/uploads)[^>]*><img}", '{ wp-image-[0-9]*" /></a>}'], ["<img", '" />'], $content);
@@ -134,7 +134,7 @@ function clear_br($content)
 {
 	return str_replace("<br />", "<br clear='none'/>", $content);
 }
-add_filter("the_content", "clear_br");
+//add_filter("the_content", "clear_br");
 
 //ADD CATEGORY NAME TO BODY class
 add_filter("body_class", "add_category_to_single");
