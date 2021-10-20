@@ -14,6 +14,7 @@ class SKFCptNewsletter
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
+		DEBUG('send email init');
 	}
 	/**
 	* Registrerar CPTn
@@ -96,6 +97,7 @@ class SKFCptNewsletter
 	
 	public function new_post($new_status, $old_status, $post)
 	{
+		
 		if ( 'newsletter' !== $post->post_type )
 			return; 
 		
@@ -119,6 +121,9 @@ class SKFCptNewsletter
 	
 	public function after_insert($post_id, $post, $update, $post_before )
 	{
+
+		DEBUG('new post' . $post->post_type);
+		
 		if ( 'newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
 		}
@@ -156,6 +161,7 @@ class SKFCptNewsletter
 			if($recipients[$i] != $from_email)
 			$bcc[$recipients[$i]] = '';
 		}
+		DEBUG('send email');
 		$html = $this->generate_from_template('newsletter', $subject, $fields);
 
 		//$from_name = 'Sverges Konstforeningar';
