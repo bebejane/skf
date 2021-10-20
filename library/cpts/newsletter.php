@@ -3,19 +3,16 @@
 * @package default
 * @author Bébé Jane
 */
-include get_template_directory() . '/.env.php';
 require_once( __DIR__ .'/../php//sendgrid/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
 class SKFCptNewsletter
 {
-	
 	public function __construct()
 	{
 		add_action( 'init', array( $this, 'register' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
-		DEBUG(SENDGRID_API_KEY);
 	}
 	/**
 	* Registrerar CPTn
