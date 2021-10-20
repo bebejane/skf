@@ -11,10 +11,9 @@ class SKFCptNewsletter
 	public function __construct()
 	{
 		add_action( 'init', array( $this, 'register' ) );
+		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
-
-		$this->generate_from_template('newsletter', []);
 	}
 	/**
 	* Registrerar CPTn
@@ -54,6 +53,14 @@ class SKFCptNewsletter
 			)
 		);
 	}
+	public function register_taxonomy()
+	{
+		register_taxonomy( 'newsletter-category', 'newsletter', array(
+			'label' => 'Utskick',
+			'hierarchical' => true
+		));
+		register_taxonomy_for_object_type( 'newsletter-category', 'newsletter' );
+	}
 	public function register_hooks()
 	{
 		//add_action( 'transition_post_status', array( $this, 'new_post' ), 10, 3);
@@ -75,8 +82,7 @@ class SKFCptNewsletter
 	}
 	
 	public function parse_recipients($value, $post_id, $field, $original)
-	{	
-		debug('parse');	
+	{		
 		$recipients = SKFCptNewsletter::extract_email_addresses($value);
 		
 		// Set reciepents value to email CSV
@@ -119,6 +125,7 @@ class SKFCptNewsletter
 			return;
 		}
 		
+		$fields = get_fields($post->ID);
 		$subject = $post->post_title;
 		$message = get_field('message', $post->ID);
 		$recipients_field = get_field('recipients', $post->ID);
@@ -128,7 +135,7 @@ class SKFCptNewsletter
 			$this->send_notice('error', 'Alla fält ar ej ifyllda!');
 			return;
 		}
-		$success = $this->send_email($recipients, $subject, $message);
+		$success = $this->send_email($recipients, $subject, $message, $fields);
 	}
 	
 	public function generate_email($html)
@@ -136,7 +143,7 @@ class SKFCptNewsletter
 		debug($html);
 	}
 	
-	public function send_email($recipients, $subject, $message)
+	public function send_email($recipients, $subject, $message, $fields)
 	{	
 		debug('SEND NYHETSBREV');
 		
@@ -158,10 +165,10 @@ class SKFCptNewsletter
 			if($recipients[$i] != $from_email)
 			$bcc[$recipients[$i]] = '';
 		}
-		$html = $this->generate_from_template('newsletter', array(
-			'subject' => $subject, 
-			'message' => $message
-		));
+		$html = $this->generate_from_template('newsletter', $subject, $fields);
+
+		//$from_email = 'info@svergeskonstforeningar.nu';
+		//$from_name = 'Sverges Konstforeningar';
 
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
@@ -224,12 +231,14 @@ class SKFCptNewsletter
 		delete_transient( get_current_user_id().'newsletter-' . $type );
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
 	}
-	private function generate_from_template($template, $data){
-		$fileName = get_template_directory() . '/templates/email/' . $template . '.html';
+	private function generate_from_template($template, $subject, $fields){
+		$fileName = get_template_directory() . '/library/email/' . $template . '.html';
 		$html = file_get_contents($fileName);
-		foreach (array_keys($data) as $key) {
+		$fields['subject'] = $subject;
+		
+		foreach (array_keys($fields) as $key) {
 			$tag = '{{' . $key . '}}';
-			$html = str_replace($tag, $data[$key], $html);
+			$html = str_replace($tag, $fields[$key], $html);
 		}
 		return $html;
 	}
