@@ -113,14 +113,12 @@ class SKFCptNewsletter
 	
 	public function before_insert($data, $postarr, $unsanitized_postarr )
 	{
-		debug('before_insert');	
 		$data['post_status'] = 'draft';
 		return $data;
 	}
 	
 	public function after_insert($post_id, $post, $update, $post_before )
 	{
-		debug('after_insert');	
 		if ( 'newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
 		}
@@ -138,15 +136,8 @@ class SKFCptNewsletter
 		$success = $this->send_email($recipients, $subject, $message, $fields);
 	}
 	
-	public function generate_email($html)
-	{
-		debug($html);
-	}
-	
 	public function send_email($recipients, $subject, $message, $fields)
 	{	
-		debug('SEND NYHETSBREV');
-		
 		$from_email = get_field('newsletter_from_email','option');
 		$from_name = get_field('newsletter_from_name','option');
 		
@@ -167,9 +158,9 @@ class SKFCptNewsletter
 		}
 		$html = $this->generate_from_template('newsletter', $subject, $fields);
 
-		//$from_email = 'info@svergeskonstforeningar.nu';
 		//$from_name = 'Sverges Konstforeningar';
-
+		//$from_email = 'info@svergeskonstforeningar.nu';
+		
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
@@ -195,11 +186,11 @@ class SKFCptNewsletter
 			return false;
 		}
 
-		$this->send_notice('success', 'E-mail skickat till ' . count($bcc) . ' personer!');
+		$this->send_notice('success', 'E-mail skickades till ' . count($bcc) . ' personer');
 		return true;
 	}
-	
-	public static function extract_email_addresses($text){
+	public static function extract_email_addresses($text)
+	{
 		$pattern	=	"/(?:[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/";
 		preg_match_all($pattern, $text, $matches);
 		return $matches[0];
@@ -231,7 +222,8 @@ class SKFCptNewsletter
 		delete_transient( get_current_user_id().'newsletter-' . $type );
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
 	}
-	private function generate_from_template($template, $subject, $fields){
+	private function generate_from_template($template, $subject, $fields)
+	{
 		$fileName = get_template_directory() . '/library/email/' . $template . '.html';
 		$html = file_get_contents($fileName);
 		$fields['subject'] = $subject;
