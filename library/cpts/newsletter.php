@@ -160,7 +160,8 @@ class SKFCptNewsletter
 
 		//$from_name = 'Sverges Konstforeningar';
 		//$from_email = 'info@svergeskonstforeningar.nu';
-		
+		DEBUG('send email');
+		DEBUG($fields);
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
