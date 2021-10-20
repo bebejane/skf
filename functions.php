@@ -441,6 +441,7 @@ function remove_dashboard_widgets()
 add_action("wp_dashboard_setup", "remove_dashboard_widgets");
 
 // Lookup WPForms form ids
+/*
 if (function_exists("wpforms")) {
 	$forms = wpforms()->form->get();
 	$participate_form_index = array_key_first(array_filter($forms, function($f){ return $f->post_title == 'Medlemsansökan'; }));
@@ -449,6 +450,7 @@ if (function_exists("wpforms")) {
 	$participate_id = is_numeric($participate_form_index) ? $forms[$participate_form_index]->ID : null;
 	$member_id = is_numeric($member_form_index) ? $forms[$member_form_index]->ID : null;
 }
+*/
 
 // Debug helper
 function debug($obj)
