@@ -72,6 +72,7 @@ class SKFCptNewsletter
 	}
 	public function validate_recipients( $valid, $value, $field, $input_name )
 	{	
+
 		if( $valid !== true ) {
 			return $valid;
 		}
@@ -97,7 +98,7 @@ class SKFCptNewsletter
 	
 	public function new_post($new_status, $old_status, $post)
 	{
-		
+		debug('NEW NEWSLETTER ' . $post->post_type); 
 		if ( 'newsletter' !== $post->post_type )
 			return; 
 		
@@ -123,7 +124,7 @@ class SKFCptNewsletter
 	{
 
 		DEBUG('new post' . $post->post_type);
-		
+
 		if ( 'newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
 		}
