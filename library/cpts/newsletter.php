@@ -3,7 +3,7 @@
 * @package default
 * @author Bébé Jane
 */
-require_once( __DIR__ .'/../php//sendgrid/sendgrid-php.php' );
+require_once( __DIR__ .'/../php/sendgrid/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
 class SKFCptNewsletter
@@ -13,6 +13,8 @@ class SKFCptNewsletter
 		add_action( 'init', array( $this, 'register' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
+
+		$this->generate_from_template('newsletter', []);
 	}
 	/**
 	* Registrerar CPTn
@@ -156,14 +158,18 @@ class SKFCptNewsletter
 			if($recipients[$i] != $from_email)
 			$bcc[$recipients[$i]] = '';
 		}
-		
+		$html = $this->generate_from_template('newsletter', array(
+			'subject' => $subject, 
+			'message' => $message
+		));
+
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
 		$email->addBccs($bcc);
 		$email->setSubject($subject);
-		$email->addContent("text/plain", "text content");
-		$email->addContent("text/html", $message);
+		$email->addContent("text/plain", $message);
+		$email->addContent("text/html", $html);
 		$sendgrid = new \SendGrid(SENDGRID_API_KEY);
 		$error_message = null;
 		
@@ -218,5 +224,15 @@ class SKFCptNewsletter
 		delete_transient( get_current_user_id().'newsletter-' . $type );
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
 	}
+	private function generate_from_template($template, $data){
+		$fileName = get_template_directory() . '/templates/email/' . $template . '.html';
+		$html = file_get_contents($fileName);
+		foreach (array_keys($data) as $key) {
+			$tag = '{{' . $key . '}}';
+			$html = str_replace($tag, $data[$key], $html);
+		}
+		return $html;
+	}
 }
 new SKFCptNewsletter();
+
