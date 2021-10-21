@@ -11,6 +11,7 @@ class SKFCptNewsletter
 	public function __construct()
 	{
 		add_action( 'init', array( $this, 'register' ) );
+		add_action( 'init', array( $this, 'register_meta' ) );
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
@@ -53,6 +54,13 @@ class SKFCptNewsletter
 			)
 		);
 	}
+	public function register_meta()
+	{
+		register_post_meta('newsletter', 'sendgrid_message_id', array( 
+			'type' => 'string',
+			'single' => true
+		));
+	}
 	public function register_taxonomy()
 	{
 		register_taxonomy( 'newsletter-category', 'newsletter', array(
@@ -63,12 +71,11 @@ class SKFCptNewsletter
 	}
 	public function register_hooks()
 	{
-		//add_action( 'transition_post_status', array( $this, 'new_post' ), 10, 3);
-		//add_filter( 'wp_insert_post_data',array( $this, 'before_insert' ), 10, 3);
 		add_action( 'wp_after_insert_post', array( $this, 'after_insert' ), 10, 4);
 		add_filter( 'acf/update_value/name=recipients', array( $this, 'parse_recipients'), 10, 4);		
 		add_filter( 'acf/validate_value/name=recipients', array( $this, 'validate_recipients' ), 10, 4);
 	}
+
 	public function validate_recipients( $valid, $value, $field, $input_name )
 	{	
 
@@ -94,7 +101,7 @@ class SKFCptNewsletter
 			return $value;
 		}
 	}
-	
+
 	public function new_post($new_status, $old_status, $post)
 	{
 		
@@ -127,29 +134,31 @@ class SKFCptNewsletter
 		}		
 		$fields = get_fields($post->ID);
 		$subject = $post->post_title;
-		$message = get_field('message', $post->ID);
 		$recipients_field = get_field('recipients', $post->ID);
 		$recipients = SKFCptNewsletter::extract_email_addresses($recipients_field);
 		
-		if ( $subject == '' or $message == '' or count($recipients) == 0) {
+		if ( $subject == '' or count($recipients) == 0) {
 			$this->send_notice('error', 'Alla fält ar ej ifyllda!');
 			return;
 		}
-		$success = $this->send_email($recipients, $subject, $message, $fields, $post);
+		$success = $this->send_email($recipients, $subject, $post);
 
 	}
-	
-	public function send_email($recipients, $subject, $message, $fields, $post)
+	public function send_email($recipients, $subject, $post)
 	{	
-		$from_email = get_field('newsletter_from_email','option');
-		$from_name = get_field('newsletter_from_name','option');
+		$from_name = 'Bebe Jane';
+		$from_email = 'bebejanedev@gmail.com';
+		//$from_name = 'Sverges Konstforeningar';
+		//$from_email = 'info@svergeskonstforeningar.nu';
+		$reply_to = get_field('newsletter_reply_to','option');
+		$sendgrid_message_id = null;
 		
 		if(!SENDGRID_API_KEY){
 			$this->send_notice('error', 'API key för Sendgrid saknas!');
 			return false;
 		}
 			
-		if(!$from_email or !$from_name){
+		if(!$reply_to){
 			$this->send_notice('error', 'Inställningar for utskick saknas!');
 			return false;
 		}
@@ -159,19 +168,18 @@ class SKFCptNewsletter
 			if($recipients[$i] != $from_email)
 			$bcc[$recipients[$i]] = '';
 		}
-		
-		
-		//$from_name = 'Sverges Konstforeningar';
-		//$from_email = 'info@svergeskonstforeningar.nu';
 
+		DEBUG(get_permalink($post));
+		$text = 'text messsage';
 		$html = file_get_contents(get_permalink($post));
-		//$html = $this->generate_from_template('newsletter', $subject, $fields, $post);
+
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
+		$email->setReplyTo($reply_to);
 		$email->addBccs($bcc);
 		$email->setSubject($subject);
-		$email->addContent("text/plain", $message);
+		$email->addContent("text/plain", $text);
 		$email->addContent("text/html", $html);
 		$sendgrid = new \SendGrid(SENDGRID_API_KEY);
 		$error_message = null;
@@ -179,6 +187,13 @@ class SKFCptNewsletter
 		try {
 			$response = $sendgrid->send($email);
 			$body = json_decode($response->body());
+			$headers = $response->headers();
+			foreach ($headers as $header){
+				if(strpos($header, 'X-Message-Id', 0) !== false){
+					$sendgrid_message_id = str_replace('X-Message-Id: ', '', $header);
+				}
+			}
+
 			if($body and $body->errors and count($body->errors) and $body->errors[0]->message){
 				$error_message = $body->errors[0]->message;
 			}
@@ -190,7 +205,15 @@ class SKFCptNewsletter
 			$this->send_notice('error', $error_message);
 			return false;
 		}
+		if($sendgrid_message_id){
+			update_post_meta($post->ID, 'sendgrid_message_id', $sendgrid_message_id);
+		}
 
+		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . $from_email);
+		DEBUG('Recipients');
+		DEBUG($recipients);
+		DEBUG('SendGridID: ' . $sendgrid_message_id);
+		
 		$this->send_notice('success', 'E-mail skickades till ' . count($bcc) . ' personer');
 		return true;
 	}
@@ -220,29 +243,12 @@ class SKFCptNewsletter
 		$success = get_transient( get_current_user_id().'newsletter-success' );
 		
 		if(!$error and !$success) 
-		return;
+			return;
 		
 		$type = $error ? 'error' : 'success';
 		$class = 'notice notice-' . $type . ' is-dismissible';
 		delete_transient( get_current_user_id().'newsletter-' . $type );
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
-	}
-	private function generate_from_template($template, $subject, $fields, $post_id)
-	{
-
-		/*
-		$fileName = get_template_directory() . '/library/email/' . $template . '.html';
-		$html = file_get_contents($fileName);
-		$fields['subject'] = $subject;
-		
-		foreach (array_keys($fields) as $key) {
-			$tag = '{{' . $key . '}}';
-			$html = str_replace($tag, $fields[$key], $html);
-		}
-		*/
-		$html = file_get_contents(get_permalink($post));
-
-		return $html;
 	}
 }
 new SKFCptNewsletter();

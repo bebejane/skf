@@ -3,28 +3,9 @@
     "title": "Inställningar for utskick",
     "fields": [
         {
-            "key": "field_6128e8040ccfa",
-            "label": "Namn",
-            "name": "newsletter_from_name",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
-        },
-        {
             "key": "field_6128e8330ccfb",
-            "label": "E-mail adress",
-            "name": "newsletter_from_email",
+            "label": "Reply-to",
+            "name": "newsletter_reply_to",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -58,5 +39,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1630072484
+    "modified": 1634854223
 }

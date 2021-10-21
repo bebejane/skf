@@ -11,6 +11,9 @@ require_once "library/cpts/lotteries.php";
 require_once "library/cpts/gallery.php";
 require_once "library/cpts/newsletter.php";
 
+// Sendgrid Webhook for bounced emails
+require_once "library/php/webhook/sendgrid_bounce_webhook.php";
+
 // CUSTOMIZE THE WORDPRESS ADMIN
 // require_once( 'library/admin.php' );
 
@@ -451,6 +454,9 @@ if (function_exists("wpforms")) {
 	$member_id = is_numeric($member_form_index) ? $forms[$member_form_index]->ID : null;
 }
 */
+
+
+
 
 // Debug helper
 function debug($obj)
