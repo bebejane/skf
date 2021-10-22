@@ -8,26 +8,29 @@ function bounced_email_webhook(){
 		return;
 	}
 	$entityBody = file_get_contents('php://input');
-	$form = []; parse_str($entityBody, $form);
+	$form = []; 
+	parse_str($entityBody, $form);
 	$sendgrid_message_id = $form['sendgrid_message_id'];
-	$reply_to = get_reply_to_from_message_id($sendgrid_message_id);
+	$data = get_by_sendgrid_id($sendgrid_message_id);
 	$error_email = 'fuckedup@email.com';
-
-	if($reply_to){
-		send_bounced_email($reply_to, $error_email);
-	}
-	$response = array(
-		'success' => $reply_to != null,
-		'reply-to' => $reply_to,
-		'sendgrid_message_id' => $sendgrid_message_id
-	);
+	$response = null;
+	if($data){
+		send_bounced_email($data['reply_to'], $data['post'], $error_email);
+		$response = array(
+			'success' => true,
+			'reply-to' => $data['reply_to'],
+			'sendgrid_message_id' => $sendgrid_message_id
+		);
+	} else {
+		$response = array('success' => false);
+	}	
 	wp_send_json( $response, 200 );
 }
-function get_reply_to_from_message_id($sendgrid_message_id){
-	$reply_to = null;
+function get_by_sendgrid_id($sendgrid_message_id){
+	$data = null;
 
 	if(!function_exists('get_sites')){
-		return get_reply_to($sendgrid_message_id);
+		return get_post_and_reply_to($sendgrid_message_id);
 	}
 	$subsites = get_sites(array(
 		'order_by' => 'last_updated',
@@ -37,15 +40,15 @@ function get_reply_to_from_message_id($sendgrid_message_id){
 	foreach( $subsites as $subsite ) {
 		$subsite_id = get_object_vars($subsite)["blog_id"];
 		switch_to_blog($subsite_id);
-		$reply_to = get_reply_to($sendgrid_message_id);
-		if($reply_to != null){
-			return $reply_to;
+		$data = get_post_and_reply_to($sendgrid_message_id);
+		if($data != null){
+			return $data;
 		}
 	}
 	return $reply_to;
 }
 
-function get_reply_to($sendgrid_message_id){
+function get_post_and_reply_to($sendgrid_message_id){
 
 	$posts = get_posts(array(
 		'post_type' => 'newsletter',
@@ -58,12 +61,12 @@ function get_reply_to($sendgrid_message_id){
 	));
 	if( $posts ) {
 		$reply_to = get_field('newsletter_reply_to','option');
-		return  $reply_to;
+		return  array('post' => $posts[0], 'reply_to' => $reply_to);
 	}
 	return null;
 }
 
-function send_bounced_email($to_email, $error_email){
+function send_bounced_email($to_email, $post, $error_email){
 
 		$from_name = 'Bebe Jane';
 		$from_email = 'bebejanedev@gmail.com';
@@ -71,7 +74,7 @@ function send_bounced_email($to_email, $error_email){
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$to_email => '']);
-		$email->setSubject('Ogliltig email adress vid utskick');
+		$email->setSubject('Ogliltig email adress.');
 		$email->addContent("text/plain", $text);
 		//$email->addContent("text/html", $html);
 		$sendgrid = new \SendGrid(SENDGRID_API_KEY);
@@ -96,7 +99,5 @@ function send_bounced_email($to_email, $error_email){
 		}
 
 }
-
-
 add_action( 'init', 'bounced_email_webhook' );
 ?>
