@@ -15,6 +15,8 @@ class SKFCptNewsletter
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
+
+
 	}
 	/**
 	* Registrerar CPTn
@@ -56,7 +58,7 @@ class SKFCptNewsletter
 	}
 	public function register_meta()
 	{
-		register_post_meta('newsletter', 'sendgrid_message_id', array( 
+		register_post_meta('newsletter', 'sg_message_id', array( 
 			'type' => 'string',
 			'single' => true
 		));
@@ -146,15 +148,11 @@ class SKFCptNewsletter
 	}
 	public function send_email($recipients, $subject, $post)
 	{	
-		$from_name = 'Bebe Jane';
-		$from_email = 'bebejanedev@gmail.com';
-		//$from_name = 'Sverges Konstforeningar';
-		//$from_email = 'info@svergeskonstforeningar.nu';
 		$reply_to = get_field('newsletter_reply_to','option');
-		$sendgrid_message_id = null;
+		$sg_message_id = null;
 		
-		if(!SENDGRID_API_KEY){
-			$this->send_notice('error', 'API key för Sendgrid saknas!');
+		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL || !SENDGRID_NAME){
+			$this->send_notice('error', 'Installningar i wp-config saknas för Sendgrid!');
 			return false;
 		}
 			
@@ -165,16 +163,16 @@ class SKFCptNewsletter
 
 		$bcc = array();
 		for ($i = 0; $i < count($recipients); $i++){
-			if($recipients[$i] != $from_email)
-			$bcc[$recipients[$i]] = '';
+			if($recipients[$i] != SENDGRID_EMAIL)
+				$bcc[$recipients[$i]] = '';
 		}
 
 		$text = 'text messsage';
 		$html = file_get_contents(get_permalink($post));
-		
+
 		$email = new Mail();
-		$email->setFrom($from_email, $from_name);
-		$email->addTos([$from_email => $from_name]);
+		$email->setFrom(SENDGRID_EMAIL, SENDGRID_NAME);
+		$email->addTos([SENDGRID_EMAIL => SENDGRID_NAME]);
 		$email->setReplyTo($reply_to);
 		$email->addBccs($bcc);
 		$email->setSubject($subject);
@@ -189,7 +187,7 @@ class SKFCptNewsletter
 			$headers = $response->headers();
 			foreach ($headers as $header){
 				if(strpos($header, 'X-Message-Id', 0) !== false){
-					$sendgrid_message_id = str_replace('X-Message-Id: ', '', $header);
+					$sg_message_id = str_replace('X-Message-Id: ', '', $header);
 				}
 			}
 
@@ -204,14 +202,14 @@ class SKFCptNewsletter
 			$this->send_notice('error', $error_message);
 			return false;
 		}
-		if($sendgrid_message_id){
-			update_post_meta($post->ID, 'sendgrid_message_id', $sendgrid_message_id);
+		if($sg_message_id){
+			update_post_meta($post->ID, 'sg_message_id', $sg_message_id);
 		}
 
-		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . $from_email);
+		DEBUG('Sent newssletter. From: ' . SENDGRID_NAME . ' ' . SENDGRID_EMAIL);
 		DEBUG('Recipients');
 		DEBUG($recipients);
-		DEBUG('SendGridID: ' . $sendgrid_message_id);
+		DEBUG('SendGridID: ' . $sg_message_id);
 		
 		$this->send_notice('success', 'E-mail skickades till ' . count($bcc) . ' personer');
 		return true;

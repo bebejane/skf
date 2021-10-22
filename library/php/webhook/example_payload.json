@@ -1,0 +1,15 @@
+[
+  {
+    "email":"bjornthiefgloggnattikvl@gmail.com",
+    "event":"bounce",
+    "ip":"167.89.24.164",
+    "reason":"550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at https://support.google.com/mail/?p=NoSuchUser l11si13047929pfc.285 - gsmtp",
+    "sg_event_id":"Ym91bmNlLTAtMjM2Mzg1MzYtTjI3eExmSHNUY0d6WUNSS2FvU1BoZy0x",
+    "sg_message_id":"N27xLfHsTcGzYCRKaoSPhg.filterdrecv-75ff7b5ffb-7dt9d-1-61726F90-1A.1",
+    "smtp-id":"<N27xLfHsTcGzYCRKaoSPhg@geopod-ismtpd-6-1>",
+    "status":"5.1.1",
+    "timestamp":1634889616,
+    "tls":1,
+    "type":"bounce"
+  }
+]
