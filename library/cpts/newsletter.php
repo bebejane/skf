@@ -171,6 +171,7 @@ class SKFCptNewsletter
 
 		$text = 'text messsage';
 		$html = file_get_contents(get_permalink($post));
+		
 		$email = new Mail();
 		$email->setFrom($from_email, $from_name);
 		$email->addTos([$from_email => $from_name]);
