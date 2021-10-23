@@ -121,7 +121,7 @@ class SKFCptNewsletter
 		$recipients = SKFCptNewsletter::extract_email_addresses($recipients_field);
 		
 		if ( $subject == '' or count($recipients) == 0) {
-			$this->send_notice('error', 'Alla fält ar ej ifyllda!');
+			$this->handle_error($post_id, 'Alla fält ar ej ifyllda!');
 			return;
 		}
 		$success = $this->send_email($recipients, $subject, $post);
@@ -129,16 +129,17 @@ class SKFCptNewsletter
 
 	public function send_email($recipients, $subject, $post)
 	{	
+		$post_id = $post->ID;
 		$reply_to = get_field('newsletter_reply_to','option');
 		$sg_message_id = null;
 		
 		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL || !SENDGRID_NAME){
-			$this->send_notice('error', 'Inställningar i wordpress saknas för SendGrid!');
+			$this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 			return false;
 		}
 			
 		if(!$reply_to){
-			$this->send_notice('error', 'Inställningar for utskick saknas!');
+			$this->handle_error($post_id, 'Inställningar for utskick saknas!');
 			return false;
 		}
 
@@ -152,7 +153,7 @@ class SKFCptNewsletter
 		$html = file_get_contents(get_permalink($post));
 
 		if(!$html){
-			$this->send_notice('error', 'Utskicket är tomt!');
+			$this->handle_error($post_id, 'Utskicket är tomt!');
 			return false;
 		}
 
@@ -186,19 +187,18 @@ class SKFCptNewsletter
 		}
 		
 		if($error_message != null){
-			$this->send_notice('error', $error_message);
+			$this->handle_error($post_id, $error_message);
 			return false;
 		}
 		if($sg_message_id){
-			update_post_meta($post->ID, 'sg_message_id', $sg_message_id);
+			update_post_meta($post_id, 'sg_message_id', $sg_message_id);
 		}
 
 		DEBUG('Sent newssletter. From: ' . SENDGRID_NAME . ' ' . SENDGRID_EMAIL);
 		DEBUG('Recipients');
 		DEBUG($recipients);
 		DEBUG('SendGridID: ' . $sg_message_id);
-		
-		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' medlemmar');
+		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' ' . (count($bcc) == 1 ? 'medlem' : 'medlemmar'));
 		return true;
 	}
 	public static function extract_email_addresses($text)
@@ -217,9 +217,15 @@ class SKFCptNewsletter
 			return (preg_match($pattern, $email) === 1) ? $email : false;
 		}
 	}
+	public function handle_error($post_id, $message)
+	{
+		$this->send_notice('error', $message);
+		wp_update_post(array('ID'=>$post_id, 'post_status' => 'draft'));
+	}
+	
 	public function send_notice($type, $message)
 	{
-		set_transient( get_current_user_id().'newsletter-'.$type, $message);		
+		set_transient(get_current_user_id().'newsletter-'.$type, $message);		
 	}
 	public function handle_noticies()
 	{

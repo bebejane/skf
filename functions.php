@@ -456,8 +456,6 @@ if (function_exists("wpforms")) {
 */
 
 
-
-
 // Debug helper
 function debug($obj)
 {
