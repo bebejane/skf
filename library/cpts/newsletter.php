@@ -115,7 +115,6 @@ class SKFCptNewsletter
 		if ('newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
 		}		
-		$fields = get_fields($post->ID);
 		$subject = $post->post_title;
 		$recipients_field = get_field('recipients', $post->ID);
 		$recipients = SKFCptNewsletter::extract_email_addresses($recipients_field);
@@ -149,8 +148,8 @@ class SKFCptNewsletter
 				$bcc[$recipients[$i]] = '';
 		}
 
-		$text = file_get_contents(get_permalink($post) . '?text_content=true');;
-		$html = file_get_contents(get_permalink($post));
+		$text = file_get_contents(get_permalink($post_id) . '?text_content=true');
+		$html = file_get_contents(get_permalink($post_id) . '?html_content=true');
 
 		if(!$html){
 			$this->handle_error($post_id, 'Utskicket är tomt!');
