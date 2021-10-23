@@ -15,8 +15,6 @@ class SKFCptNewsletter
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
 		add_action( 'init', array( $this, 'register_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'handle_noticies' ));
-
-
 	}
 	/**
 	* Registrerar CPTn
@@ -56,6 +54,9 @@ class SKFCptNewsletter
 			)
 		);
 	}
+	/**
+	* Registrera SendGrid Message ID as meta field
+	*/
 	public function register_meta()
 	{
 		register_post_meta('newsletter', 'sg_message_id', array( 
@@ -63,6 +64,7 @@ class SKFCptNewsletter
 			'single' => true
 		));
 	}
+
 	public function register_taxonomy()
 	{
 		register_taxonomy( 'newsletter-category', 'newsletter', array(
@@ -71,13 +73,14 @@ class SKFCptNewsletter
 		));
 		register_taxonomy_for_object_type( 'newsletter-category', 'newsletter' );
 	}
+
 	public function register_hooks()
 	{
 		add_action( 'wp_after_insert_post', array( $this, 'after_insert' ), 10, 4);
 		add_filter( 'acf/update_value/name=recipients', array( $this, 'parse_recipients'), 10, 4);		
 		add_filter( 'acf/validate_value/name=recipients', array( $this, 'validate_recipients' ), 10, 4);
 	}
-
+	
 	public function validate_recipients( $valid, $value, $field, $input_name )
 	{	
 
@@ -104,34 +107,12 @@ class SKFCptNewsletter
 		}
 	}
 
-	public function new_post($new_status, $old_status, $post)
-	{
-		
-		if ( 'newsletter' !== $post->post_type )
-			return; 
-		
-		debug('NEW NEWSLETTER = '. $old_status . ' > '. $new_status);
-		
-		if ( 'auto-draft' == $new_status ) {
-			debug('IS AUTO DRAFT');
-			return;
-		}
-		if ( 'publish' !== $new_status or 'publish' === $old_status ) {
-			debug('PUBLISH NOT NEW OR IS OLD');
-			return;
-		}
-	}
-	
-	public function before_insert($data, $postarr, $unsanitized_postarr )
-	{
-		$data['post_status'] = 'draft';
-		return $data;
-	}
-	
+	/**
+	 * After post is published, send the email.
+	 */
 	public function after_insert($post_id, $post, $update, $post_before )
 	{
-
-		if ( 'newsletter' !== $post->post_type or 'publish' !== $post->post_status){
+		if ('newsletter' !== $post->post_type or 'publish' !== $post->post_status){
 			return;
 		}		
 		$fields = get_fields($post->ID);
@@ -144,15 +125,15 @@ class SKFCptNewsletter
 			return;
 		}
 		$success = $this->send_email($recipients, $subject, $post);
-
 	}
+
 	public function send_email($recipients, $subject, $post)
 	{	
 		$reply_to = get_field('newsletter_reply_to','option');
 		$sg_message_id = null;
 		
 		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL || !SENDGRID_NAME){
-			$this->send_notice('error', 'Installningar i wp-config saknas för Sendgrid!');
+			$this->send_notice('error', 'Inställningar i wordpress saknas för SendGrid!');
 			return false;
 		}
 			
@@ -167,8 +148,13 @@ class SKFCptNewsletter
 				$bcc[$recipients[$i]] = '';
 		}
 
-		$text = 'text messsage';
+		$text = file_get_contents(get_permalink($post) . '?text_content=true');;
 		$html = file_get_contents(get_permalink($post));
+
+		if(!$html){
+			$this->send_notice('error', 'Utskicket är tomt!');
+			return false;
+		}
 
 		$email = new Mail();
 		$email->setFrom(SENDGRID_EMAIL, SENDGRID_NAME);
@@ -185,6 +171,7 @@ class SKFCptNewsletter
 			$response = $sendgrid->send($email);
 			$body = json_decode($response->body());
 			$headers = $response->headers();
+
 			foreach ($headers as $header){
 				if(strpos($header, 'X-Message-Id', 0) !== false){
 					$sg_message_id = str_replace('X-Message-Id: ', '', $header);
@@ -211,7 +198,7 @@ class SKFCptNewsletter
 		DEBUG($recipients);
 		DEBUG('SendGridID: ' . $sg_message_id);
 		
-		$this->send_notice('success', 'E-mail skickades till ' . count($bcc) . ' personer');
+		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' medlemmar');
 		return true;
 	}
 	public static function extract_email_addresses($text)
@@ -245,7 +232,7 @@ class SKFCptNewsletter
 		$type = $error ? 'error' : 'success';
 		$class = 'notice notice-' . $type . ' is-dismissible';
 		delete_transient( get_current_user_id().'newsletter-' . $type );
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? $error : $success ) ); 
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $error ? 'Error: ' . $error : $success ) ); 
 	}
 }
 new SKFCptNewsletter();
