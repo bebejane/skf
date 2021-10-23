@@ -3,7 +3,7 @@
 * @package default
 * @author Bébé Jane
 */
-require_once( __DIR__ .'/../php/sendgrid/sendgrid-php.php' );
+require_once( __DIR__ .'/../sendgrid/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
 class SKFCptNewsletter
