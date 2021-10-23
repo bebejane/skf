@@ -1,9 +1,10 @@
 <?php
-require_once( __DIR__ .'/../sendgrid/sendgrid-php.php' );
+require_once( __DIR__ .'/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
 function bounced_email_webhook(){
 	$hook_path = '/sendgridwebhook';
+	
 	if( $_SERVER['REQUEST_URI'] != $hook_path ){
 		return;
 	}
@@ -24,6 +25,7 @@ function bounced_email_webhook(){
 		wp_send_json( array('success' => false), 200 );
 	}	
 }
+add_action( 'init', 'bounced_email_webhook' );
 
 function get_by_sendgrid_id($sg_message_id){
 	$data = null;
@@ -44,7 +46,7 @@ function get_by_sendgrid_id($sg_message_id){
 			return $data;
 		}
 	}
-	return $reply_to;
+	return $data;
 }
 
 function get_post_and_reply_to($sg_message_id){
@@ -68,7 +70,7 @@ function get_post_and_reply_to($sg_message_id){
 
 function parse_payload_data($data) {
 	$json = json_decode($data, true);
-	
+	DEBUG($json);
 	if(!$json){
 		return null;
 	}
@@ -81,13 +83,13 @@ function parse_payload_data($data) {
 	);
 }
 
-function send_bounced_email($to_email, $post, $error_email){
+function send_bounced_email($reply_to, $post, $error_email){
 
 	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'". Det gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
 	$html = 'Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b>". Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b>';
 	$email = new Mail();
 	$email->setFrom(SENDGRID_EMAIL, SENDGRID_NAME);
-	$email->addTos([$to_email => '']);
+	$email->addTos([$reply_to => '']);
 	$email->setSubject('Utskick: Ogliltig email adress');
 	$email->addContent("text/plain", $text);
 	$email->addContent("text/html", $html);
@@ -109,11 +111,9 @@ function send_bounced_email($to_email, $post, $error_email){
 		DEBUG($error_message);
 		return false;
 	} else {
-		DEBUG('Bounce email sent to ' . $to_email . ', error email=' . $error_email);
+		DEBUG('Bounce email sent to ' . $reply_to . ', error email=' . $error_email);
 		return true;
 	}
-
 }
 
-add_action( 'init', 'bounced_email_webhook' );
 ?>
