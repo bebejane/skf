@@ -25,10 +25,11 @@
       <style type="text/css">
     body, p, div {
       font-family: "Caslon Doric Web", arial,helvetica,sans-serif;
-      font-size: 14px;
+      font-size: 16px;
     }
     body {
       color: #282828;
+      background: #F8F8F8;
     }
     body a {
       color: <?php the_field('headline_color','option'); ?>;
@@ -134,6 +135,13 @@
         margin-left: 0 !important;
         margin-right: 0 !important;
       }
+
+      .text-col {
+        padding: 1em !important;
+        padding-bottom: 2em !important;
+        padding-top: 2em !important;
+      }
+
       .social-icon-column {
         display: inline-block !important;
       }
@@ -146,6 +154,14 @@
 
 
       <center class="wrapper" data-link-color="#1188E6" data-body-style="font-size:14px; font-family:arial,helvetica,sans-serif; color:#282828; background-color:#F8F8F8;">
+
+      <div class="module" role="module" style="margin-top: 1em; background:#F8F8F8; color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;">
+        <p class="Unsubscribe--senderName" style="font-size:12px; line-height:20px;">
+        Inga bilder? Visa som <a href="<?php echo get_permalink()?>">webbsida</a> istället.
+        </p>
+      </div>
+
+
         <div class="webkit">
           <table cellpadding="0" cellspacing="0" border="0" width="100%" class="wrapper" bgcolor="#F8F8F8">
             <tr>
@@ -208,9 +224,15 @@
   <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="5f717973-c2f4-4432-90ae-01356e09e285">
     <tbody>
       <tr>
-        <td style="padding:4em 3em 3em 3em; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content">
-          <div><div style="font-family: inherit"><span style="font-size: 30px; font-weight:bold; color:<?php the_field('headline_color','option'); ?>"><?php the_sub_field('headline'); ?></span></div>
-          <div style="font-family: inherit"><br></div>
+        <td class="text-col" style="padding:3em; line-height:1.6em; text-align:inherit; 
+        <?php if (!get_sub_field('image')) {
+           echo 'border-top: 1px solid ' . get_field('headline_color','option') . ';';
+           } 
+           
+           ?>
+           " height="100%" valign="top" bgcolor="" role="module-content">
+          <div><div style="font-family: inherit"><span style="font-size: 26px; font-weight:bold; color:<?php the_field('headline_color','option'); ?>"><?php the_sub_field('headline'); ?></span></div>
+          <div style="font-family: inherit; line-height: 1em;"><br></div>
           <div style="font-family: inherit"><?php  the_sub_field('text'); ?></div><div></div></div>
         </td>
       </tr>

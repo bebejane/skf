@@ -7,7 +7,7 @@
             "label": "E-mail adresser",
             "name": "recipients",
             "type": "textarea",
-            "instructions": "Copy paste lista har",
+            "instructions": "Klistra in en lista av mailadresser här. Max 1000 st.",
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
@@ -16,7 +16,7 @@
                 "id": ""
             },
             "default_value": "",
-            "placeholder": "Kopiera komma separerad lista av e-mail adresser....",
+            "placeholder": "",
             "maxlength": "",
             "rows": "",
             "new_lines": ""
@@ -45,7 +45,7 @@
                     "label": "Bild",
                     "name": "image",
                     "type": "image",
-                    "instructions": "",
+                    "instructions": "Är inte obligatorisk, lämna tom om du inte har någon passande bild.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -107,7 +107,7 @@
                     "label": "Visa knapp",
                     "name": "has_button",
                     "type": "true_false",
-                    "instructions": "",
+                    "instructions": "Använd om du vill länka vidare.",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -200,5 +200,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1635165229
+    "modified": 1635173402
 }
