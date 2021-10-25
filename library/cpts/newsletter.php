@@ -148,7 +148,10 @@ class SKFCptNewsletter
 			if($recipients[$i] != SENDGRID_EMAIL)
 				$bcc[$recipients[$i]] = '';
 		}
-
+		if(count($bcc) > 1000){
+			$this->handle_error($post_id, 'Du kan ej skicka till mer än 1000 personer!');
+			return false;
+		}
 		$text = file_get_contents(get_permalink($post_id) . '?content_type=text');
 		$html = file_get_contents(get_permalink($post_id) . '?content_type=html');
 
