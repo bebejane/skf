@@ -129,10 +129,11 @@ class SKFCptNewsletter
 	public function send_email($recipients, $subject, $post)
 	{	
 		$post_id = $post->ID;
+		$from_name = 'Sveriges Konstforeningar';
 		$reply_to = get_field('newsletter_reply_to','option');
 		$sg_message_id = null;
 		
-		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL){
+		if(!defined('SENDGRID_API_KEY') || !defined('SENDGRID_EMAIL')){
 			$this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 			return false;
 		}
@@ -147,25 +148,26 @@ class SKFCptNewsletter
 			if($recipients[$i] != SENDGRID_EMAIL)
 				$bcc[$recipients[$i]] = '';
 		}
-
-		$text = file_get_contents(get_permalink($post_id) . '?text_content=true');
-		$html = file_get_contents(get_permalink($post_id) . '?html_content=true');
+		if(count($bcc) > 1000){
+			$this->handle_error($post_id, 'Du kan ej skicka till mer än 1000 personer!');
+			return false;
+		}
+		$text = file_get_contents(get_permalink($post_id) . '?content_type=text');
+		$html = file_get_contents(get_permalink($post_id) . '?content_type=html');
 
 		if(!$html){
 			$this->handle_error($post_id, 'Utskicket är tomt!');
 			return false;
 		}
 
-		$from_name = 'Sveriges Konstforeningar';
-		
 		if(function_exists('get_blog_details')){
-    	$blog = get_blog_details( array( 'blog_id' => $blog_id ) );
+    	$blog = get_blog_details();
 			$from_name = $blog->blogname;
 		}
 
 		$email = new Mail();
 		$email->setFrom(SENDGRID_EMAIL, $from_name);
-		$email->addTos([SENDGRID_EMAIL => $from_name]);
+		$email->addTos([$reply_to => $from_name]);
 		$email->setReplyTo($reply_to);
 		$email->addBccs($bcc);
 		$email->setSubject($subject);
@@ -201,9 +203,9 @@ class SKFCptNewsletter
 		}
 
 		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . SENDGRID_EMAIL);
+		DEBUG('SendGridID: ' . $sg_message_id);
 		DEBUG('Recipients');
 		DEBUG($recipients);
-		DEBUG('SendGridID: ' . $sg_message_id);
 		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' ' . (count($bcc) == 1 ? 'medlem' : 'medlemmar'));
 		return true;
 	}
