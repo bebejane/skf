@@ -97,8 +97,8 @@ function send_bounced_email($data, $error_email){
 	$from_name = $data['from_name'];
 	$post = $data['post'];
 
-	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'". Det gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
-	$html = 'Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b>". Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b>';
+	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'".\n\nDet gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
+	$html = '<p>Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b></p>".<p>Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b></p>';
 
 	$email = new Mail();
 	$email->setFrom(SENDGRID_EMAIL, $from_name);

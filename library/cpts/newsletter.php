@@ -134,27 +134,24 @@ class SKFCptNewsletter
 		$sg_message_id = null;
 		
 		if(!defined('SENDGRID_API_KEY') || !defined('SENDGRID_EMAIL')){
-			$this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
-			return false;
+			return $this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 		}
-			
 		if(!$reply_to){
-			$this->handle_error($post_id, 'Inställningar for utskick saknas!');
-			return false;
+			return $this->handle_error($post_id, 'Inställningar for utskick saknas!');
+		}
+		if(in_array($reply_to, $recipients)){
+			return $this->handle_error($post_id, 'Det gâr ej att skicka till samma address du använder som Reply-to adress. Ta bort ' . $reply_to .  ' frân listan för att skicka meddelandet.');
+		}
+		if(count($recipients) > 1000){
+			return $this->handle_error($post_id, 'Du kan ej skicka till mer än 1000 personer!');
 		}
 
 		$bcc = array();
 		for ($i = 0; $i < count($recipients); $i++){
 			if($recipients[$i] != SENDGRID_EMAIL)
 				$bcc[$recipients[$i]] = '';
-			if($recipients[$i] == $reply_to){
-				return $this->handle_error($post_id, 'Det gâr ej att skicka till samma address du använder som Reply-to adress. Ta bort ' . $reply_to .  ' frân listan för att skicka meddelandet.');
-			}
 		}
-		if(count($bcc) > 1000){
-			$this->handle_error($post_id, 'Du kan ej skicka till mer än 1000 personer!');
-			return false;
-		}
+		
 		$text = file_get_contents(get_permalink($post_id) . '?content_type=text');
 		$html = file_get_contents(get_permalink($post_id) . '?content_type=html');
 
@@ -228,16 +225,19 @@ class SKFCptNewsletter
 			return (preg_match($pattern, $email) === 1) ? $email : false;
 		}
 	}
+
 	public function handle_error($post_id, $message)
 	{
 		$this->send_notice('error', $message);
 		wp_update_post(array('ID'=>$post_id, 'post_status' => 'draft'));
+		return false;
 	}
 	
 	public function send_notice($type, $message)
 	{
 		set_transient(get_current_user_id().'newsletter-'.$type, $message);		
 	}
+
 	public function handle_noticies()
 	{
 		$error = get_transient( get_current_user_id().'newsletter-error' );
