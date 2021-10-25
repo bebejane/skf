@@ -2,18 +2,22 @@
 /**
  * Handles bounced emails from SendGrid. Relays bounced email addresses to the Reply-to address
  * specifiled in settings for SKF theme. 
+ * API Endpoint https://konstforeningar.se/sendgrid/bounce (POST)
  * @author Bébé Jane
 */
 
 require_once( __DIR__ .'/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'sendgrid', '/bounce', array(
+    'methods' => 'POST',
+    'callback' => 'bounced_email_webhook'
+  ));
+});
+
 function bounced_email_webhook(){
-	$hook_path = '/sendgridwebhook';
-	
-	if( $_SERVER['REQUEST_URI'] != $hook_path ){
-		return;
-	}
+
 	DEBUG('bounce web hook');
 	$entityBody = file_get_contents('php://input');
 	$payload = parse_payload_data($entityBody);
@@ -35,7 +39,6 @@ function bounced_email_webhook(){
 		wp_send_json( array('success' => false), 200 );
 	}	
 }
-add_action( 'init', 'bounced_email_webhook' );
 
 function get_by_sendgrid_id($sg_message_id){
 	$data = null;
@@ -82,7 +85,6 @@ function get_post_and_reply_to($sg_message_id){
 	}
 	return null;
 }
-
 
 function parse_payload_data($data) {
 	$json = json_decode($data, true);

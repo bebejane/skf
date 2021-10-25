@@ -462,6 +462,17 @@ function debug($obj)
 	error_log(print_r($obj, true));
 }
 
+function bounced_email(){
+  return 'nice';
+}
+
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'sendgrid', '/bounce', array(
+    'methods' => 'POST',
+    'callback' => 'bounced_email'
+  ));
+});
+
 /* DON'T DELETE THIS CLOSING TAG */
 
 ?>
