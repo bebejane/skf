@@ -91,14 +91,17 @@ function parse_payload_data($data) {
 
 function send_bounced_email($data, $error_email){
 
+	$reply_to = $data['reply_to'];
+	$from_name = $data['from_name'];
+	$post = $data['post'];
+
 	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'". Det gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
 	$html = 'Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b>". Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b>';
 
-	$reply_to = $data['reply_to'];
-	$from_name = $data['from_name'];
 	$email = new Mail();
 	$email->setFrom(SENDGRID_EMAIL, $from_name);
 	$email->addTos([$reply_to => '']);
+	$email->setReplyTo($reply_to);
 	$email->setSubject('Utskick: Ogliltig email adress');
 	$email->addContent("text/plain", $text);
 	$email->addContent("text/html", $html);

@@ -164,7 +164,7 @@ class SKFCptNewsletter
     	$blog = get_blog_details();
 			$from_name = $blog->blogname;
 		}
-
+		
 		$email = new Mail();
 		$email->setFrom(SENDGRID_EMAIL, $from_name);
 		$email->addTos([$reply_to => $from_name]);
