@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handles bounced emails from SendGrid. Relays bounced email addresses to the Reply-to address
+ * specifiled in settings for SKF theme. 
+ * @author Bébé Jane
+*/
+
 require_once( __DIR__ .'/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
@@ -24,6 +30,8 @@ function bounced_email_webhook(){
 		DEBUG('success sending bounce to ' . $data['reply_to']);
 	} else {
 		DEBUG('something is wrong');
+		DEBUG($data);
+		DEBUG($payload);
 		wp_send_json( array('success' => false), 200 );
 	}	
 }
