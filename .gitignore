@@ -9,6 +9,7 @@ Bones.esproj/
 ############
 ## IDEs
 ############
+.vscode
 .env.php
 debug.log
 *.pydevproject

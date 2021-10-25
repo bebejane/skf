@@ -14,14 +14,16 @@ function bounced_email_webhook(){
 	$data = get_by_sendgrid_id($payload['sg_message_id']);
 	
 	if($data and $payload){
-		send_bounced_email($data['reply_to'], $data['post'], $payload['error_email']);
+		send_bounced_email($data, $payload['error_email']);
 		return wp_send_json(array(
 			'success' => true,
 			'reply-to' => $data['reply_to'],
 			'sg_message_id' => $payload['sg_message_id'],
 			'error_email' => $payload['error_email']
 		));
+		DEBUG('success sending bounce to ' . $data['reply_to']);
 	} else {
+		DEBUG('something is wrong');
 		wp_send_json( array('success' => false), 200 );
 	}	
 }
@@ -51,6 +53,8 @@ function get_by_sendgrid_id($sg_message_id){
 
 function get_post_and_reply_to($sg_message_id){
 
+	$from_name = 'Sveriges Konstföreningar';
+
 	$posts = get_posts(array(
 		'post_type' => 'newsletter',
 		'meta_query' => array(
@@ -61,8 +65,12 @@ function get_post_and_reply_to($sg_message_id){
 		)
 	));
 	if( $posts ) {
+		if(function_exists('get_blog_details')){
+    	$blog = get_blog_details();
+			$from_name = $blog->blogname;
+		}
 		$reply_to = get_field('newsletter_reply_to','option');
-		return  array('post' => $posts[0], 'reply_to' => $reply_to);
+		return  array('post' => $posts[0], 'reply_to' => $reply_to, 'from_name' => $from_name);
 	}
 	return null;
 }
@@ -83,13 +91,19 @@ function parse_payload_data($data) {
 	);
 }
 
-function send_bounced_email($reply_to, $post, $error_email){
+function send_bounced_email($data, $error_email){
+
+	$reply_to = $data['reply_to'];
+	$from_name = $data['from_name'];
+	$post = $data['post'];
 
 	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'". Det gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
 	$html = 'Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b>". Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b>';
+
 	$email = new Mail();
-	$email->setFrom(SENDGRID_EMAIL, SENDGRID_NAME);
+	$email->setFrom(SENDGRID_EMAIL, $from_name);
 	$email->addTos([$reply_to => '']);
+	$email->setReplyTo($reply_to);
 	$email->setSubject('Utskick: Ogliltig email adress');
 	$email->addContent("text/plain", $text);
 	$email->addContent("text/html", $html);
