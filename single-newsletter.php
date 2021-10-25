@@ -26,6 +26,7 @@
     body, p, div {
       font-family: "Caslon Doric Web", arial,helvetica,sans-serif;
       font-size: 16px;
+      margin: 0px;
     }
     body {
       color: #282828;
@@ -68,6 +69,10 @@
     ol ol ol ol {
       list-style-type: decimal !important;
     }
+
+    .text-col {
+        padding: 3em ;
+      }
 
     @font-face {
         font-family: "Caslon Doric Web";
@@ -155,7 +160,7 @@
 
       <center class="wrapper" data-link-color="#1188E6" data-body-style="font-size:14px; font-family:arial,helvetica,sans-serif; color:#282828; background-color:#F8F8F8;">
 
-      <div class="module" role="module" style="margin-top: 1em; background:#F8F8F8; color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;">
+      <div class="module" role="module" style="background:#F8F8F8; color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;">
         <p class="Unsubscribe--senderName" style="font-size:12px; line-height:20px;">
         Inga bilder? Visa som <a href="<?php echo get_permalink()?>">webbsida</a> istället.
         </p>
