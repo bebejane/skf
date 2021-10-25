@@ -1,26 +1,4 @@
-<?php
-
-// Check rows exists.
-if( have_rows('sections') ):
-
-    // Loop through rows.
-    while( have_rows('sections') ) : the_row();
-
-        // Load sub field value.
-        the_sub_field('headline');
-
-        the_sub_field('text');
-
-        the_sub_field('url');
-    
-        // Do something...
-
-    // End loop.
-    endwhile;
-
-  endif;
-
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -46,7 +24,7 @@ if( have_rows('sections') ):
 <![endif]-->
       <style type="text/css">
     body, p, div {
-      font-family: arial,helvetica,sans-serif;
+      font-family: "Caslon Doric Web", arial,helvetica,sans-serif;
       font-size: 14px;
     }
     body {
@@ -89,6 +67,31 @@ if( have_rows('sections') ):
     ol ol ol ol {
       list-style-type: decimal !important;
     }
+
+    @font-face {
+        font-family: "Caslon Doric Web";
+        src: url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-RegularNo2-Web.woff2") format("woff2"),
+              url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-RegularNo2-Web.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        }
+
+      @font-face {
+        font-family: "Caslon Doric Web";
+        src: url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-RegularNo2Italic-Web.woff2") format("woff2"),
+              url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-RegularNo2Italic-Web.woff") format("woff");
+        font-weight: 400;
+        font-style: italic;
+        }
+
+      @font-face {
+        font-family: "Caslon Doric Web";
+        src: url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-Semibold-Web.woff2") format("woff2"),
+              url("<?php echo get_template_directory_uri(); ?>/library/fonts/CaslonDoric-Semibold-Web.woff") format("woff");
+        font-weight: 600;
+        font-style: normal;
+        }
+
     @media screen and (max-width:480px) {
       .preheader .rightColumnContent,
       .footer .rightColumnContent {
@@ -134,6 +137,7 @@ if( have_rows('sections') ):
       .social-icon-column {
         display: inline-block !important;
       }
+
     }
   </style>
       <!--user entered Head Start--><!--End Head user entered-->
