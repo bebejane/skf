@@ -129,10 +129,11 @@ class SKFCptNewsletter
 	public function send_email($recipients, $subject, $post)
 	{	
 		$post_id = $post->ID;
+		$from_name = 'Sveriges Konstforeningar';
 		$reply_to = get_field('newsletter_reply_to','option');
 		$sg_message_id = null;
 		
-		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL){
+		if(!defined('SENDGRID_API_KEY') || !defined('SENDGRID_EMAIL')){
 			$this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 			return false;
 		}
@@ -156,8 +157,6 @@ class SKFCptNewsletter
 			return false;
 		}
 
-		$from_name = 'Sveriges Konstforeningar';
-		
 		if(function_exists('get_blog_details')){
     	$blog = get_blog_details();
 			$from_name = $blog->blogname;
