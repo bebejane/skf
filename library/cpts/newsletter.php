@@ -132,7 +132,7 @@ class SKFCptNewsletter
 		$reply_to = get_field('newsletter_reply_to','option');
 		$sg_message_id = null;
 		
-		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL || !SENDGRID_NAME){
+		if(!SENDGRID_API_KEY || !SENDGRID_EMAIL){
 			$this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 			return false;
 		}
@@ -156,9 +156,16 @@ class SKFCptNewsletter
 			return false;
 		}
 
+		$from_name = 'Sveriges Konstforeningar';
+		
+		if(function_exists('get_blog_details')){
+    	$blog = get_blog_details( array( 'blog_id' => $blog_id ) );
+			$from_name = $blog->blogname;
+		}
+
 		$email = new Mail();
-		$email->setFrom(SENDGRID_EMAIL, SENDGRID_NAME);
-		$email->addTos([SENDGRID_EMAIL => SENDGRID_NAME]);
+		$email->setFrom(SENDGRID_EMAIL, $from_name);
+		$email->addTos([SENDGRID_EMAIL => $from_name]);
 		$email->setReplyTo($reply_to);
 		$email->addBccs($bcc);
 		$email->setSubject($subject);
@@ -193,7 +200,7 @@ class SKFCptNewsletter
 			update_post_meta($post_id, 'sg_message_id', $sg_message_id);
 		}
 
-		DEBUG('Sent newssletter. From: ' . SENDGRID_NAME . ' ' . SENDGRID_EMAIL);
+		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . SENDGRID_EMAIL);
 		DEBUG('Recipients');
 		DEBUG($recipients);
 		DEBUG('SendGridID: ' . $sg_message_id);
