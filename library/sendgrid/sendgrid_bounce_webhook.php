@@ -21,7 +21,9 @@ function bounced_email_webhook(){
 			'sg_message_id' => $payload['sg_message_id'],
 			'error_email' => $payload['error_email']
 		));
+		DEBUG('success sending bounce to ' . $data['reply_to']);
 	} else {
+		DEBUG('something is wrong');
 		wp_send_json( array('success' => false), 200 );
 	}	
 }

@@ -147,6 +147,9 @@ class SKFCptNewsletter
 		for ($i = 0; $i < count($recipients); $i++){
 			if($recipients[$i] != SENDGRID_EMAIL)
 				$bcc[$recipients[$i]] = '';
+			else if($recipients[$i] == $reply_to){
+				return $this->handle_error($post_id, 'Det gâr ej att skicka till samma address du använder som reply to adress. Ta bort ' . $reply_to .  ' frân listan för att skicka meddelandet.');
+			}
 		}
 		if(count($bcc) > 1000){
 			$this->handle_error($post_id, 'Du kan ej skicka till mer än 1000 personer!');
