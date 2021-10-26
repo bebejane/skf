@@ -26,8 +26,13 @@
     body, p, div {
       font-family: "Caslon Doric Web", arial,helvetica,sans-serif;
       font-size: 16px;
-      margin: 0px;
     }
+
+    html, body {
+      margin: 0px;
+
+    }
+    
     body {
       color: #282828;
       background: #F8F8F8;
@@ -236,7 +241,7 @@
            
            ?>
            " height="100%" valign="top" bgcolor="" role="module-content">
-          <div><div style="font-family: inherit"><span style="font-size: 26px; font-weight:bold; color:<?php the_field('headline_color','option'); ?>"><?php the_sub_field('headline'); ?></span></div>
+          <div><div style="font-family: inherit"><span style="font-size: 22px; font-weight:bold; color:<?php the_field('headline_color','option'); ?>"><?php the_sub_field('headline'); ?></span></div>
           <div style="font-family: inherit; line-height: 1em;"><br></div>
           <div style="font-family: inherit"><?php  the_sub_field('text'); ?></div><div></div></div>
         </td>
@@ -256,7 +261,7 @@
             <table border="0" cellpadding="0" cellspacing="0" class="wrapper-mobile" style="text-align:center;">
               <tbody>
                 <tr>
-                <td align="center" bgcolor="#333333" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit; padding-bottom: 4em">
+                <td align="center" bgcolor="#333333" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit; padding-bottom: 3em">
                   <a href="<?php the_sub_field('url') ?>" style="background-color:<?php the_field('headline_color','option'); ?>; border:1px solid #333333; border-color:<?php the_field('headline_color','option'); ?>; border-radius:6px; border-width:1px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid;" target="_blank"><?php the_sub_field('text_link') ?></a>
                 </td>
                 </tr>
