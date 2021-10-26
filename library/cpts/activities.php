@@ -123,7 +123,7 @@ class SKFCptActivities
 		$count = wpforms()->entry->get_entries( array( 'form_id' => $form_id ), true );	
 		$max_no_people = get_post_meta( $post_id, 'max_no_people', true);
 		
-		if(!empty($max_no_people) and $count >= $max_no_people){
+		if(!empty($max_no_people) and $count > $max_no_people){
 			return true;	
 		}
 		return false;  		
