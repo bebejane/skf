@@ -1,11 +1,11 @@
 div.left {
 	width: 100%;
 	@include mq($from: desktop) {
-		width: spanNestedGrid(12,8);
+		width: spanNestedGrid(12, 8);
 		padding-right: $gutter;
 	}
 
-	&+aside {
+	& + aside {
 		@include mq($until: desktop) {
 			padding-bottom: $space;
 		}
@@ -16,14 +16,13 @@ div.right {
 	width: 100%;
 	@include mq($from: desktop) {
 		margin-bottom: $space;
-		width: spanNestedGrid(12,4) + $gutter-nested;
+		width: spanNestedGrid(12, 4) + $gutter-nested;
 		padding-left: $gutter * 2;
 	}
 
 	aside:not(:last-of-type) {
 		padding-bottom: $space;
 	}
-
 }
 
 section.text {
@@ -36,7 +35,7 @@ section.text {
 		li {
 			text-indent: 1.2em;
 			@include mq($from: tablet) {
-				text-indent: .8em;
+				text-indent: 0.8em;
 			}
 		}
 
@@ -52,7 +51,8 @@ section.text {
 			}
 		}
 
-		& + h3, & + h2 {
+		& + h3,
+		& + h2 {
 			padding-top: 0;
 		}
 
@@ -61,10 +61,9 @@ section.text {
 		}
 	}
 
-	&>h3 {
+	& > h3 {
 		padding-top: 0;
 	}
-
 }
 
 // Ev ta bort
@@ -80,7 +79,6 @@ section.schedule {
 		td {
 			padding-bottom: 0.2em;
 		}
-
 	}
 }
 
@@ -92,7 +90,7 @@ figure.content-image {
 			padding-bottom: 1em;
 		}
 		@include mq($from: desktop) {
-			width: spanNestedGrid(12,4) + $gutter-nested;
+			width: spanNestedGrid(12, 4) + $gutter-nested;
 			padding-left: $gutter * 2;
 			position: initial;
 			padding-bottom: $space * 2;
@@ -111,13 +109,13 @@ figure.content-image {
 				align-items: flex-start;
 
 				&.has-caption img {
-					width: spanNestedGrid(12,8);
+					width: spanNestedGrid(12, 8);
 				}
 
-				&.has-caption .caption{
+				&.has-caption .caption {
 					padding-top: 0;
-					width: spanNestedGrid(12,4);
-					padding-left: $gutter + spanNestedGrid(12,.2); ;
+					width: spanNestedGrid(12, 4);
+					padding-left: $gutter + spanNestedGrid(12, 0.2);
 				}
 			}
 		}
@@ -131,7 +129,8 @@ figure.content-image {
 		}
 	}
 
-	&.body, &.full {
+	&.body,
+	&.full {
 		width: 100%;
 
 		@include mq($from: tablet) {
@@ -152,8 +151,7 @@ figure.content-image {
 	}
 
 	&.body {
-
-		.wrap{
+		.wrap {
 			display: flex;
 			justify-content: space-between;
 		}
@@ -161,13 +159,12 @@ figure.content-image {
 		img {
 			align-self: flex-start;
 		}
-		}
+	}
 
 	.caption {
 		padding-top: $space;
 		padding-bottom: $space;
 	}
-
 }
 
 .single-gallery {
@@ -180,25 +177,23 @@ section.gallery {
 	padding-bottom: $space;
 
 	figure {
-		@include aspect-ratio(6,4);
+		@include aspect-ratio(6, 4);
 		display: flex;
 		margin-bottom: $space;
 		background: black;
-
 
 		.content {
 			display: flex;
 		}
 
 		img {
-					object-fit: contain !important;
-					object-position: center center;
+			object-fit: contain !important;
+			object-position: center center;
 		}
 
 		.caption {
 			display: none;
 		}
-
 	}
 
 	.swiper-footer {
@@ -210,21 +205,22 @@ section.gallery {
 			text-align: center;
 		}
 
-		.swiper-button-next, .swiper-button-prev {
-			top: 26px !important
-			}
+		.swiper-button-next,
+		.swiper-button-prev {
+			top: 6px !important;
+		}
 
 		.swiper-button-prev {
 			left: 0;
 			right: auto !important;
 		}
-
 	}
 }
 
 // Ev ta bort
 aside.related {
-	& > ul, form {
+	& > ul,
+	form {
 		border: $image-border;
 		padding: $space;
 		padding-left: $space * 0.9;
@@ -255,7 +251,7 @@ ul.collaborators {
 	width: 100%;
 	display: flex;
 	list-style: none;
-	@include space(2, 'padding-bottom');
+	@include space(2, "padding-bottom");
 
 	a {
 		border-bottom: 0px solid !important;
@@ -264,12 +260,11 @@ ul.collaborators {
 	li {
 		padding-right: $gutter-nested;
 
-		img{
+		img {
 			max-height: 50px;
 			width: auto;
 		}
 	}
-
 }
 
 aside.event {
@@ -281,22 +276,21 @@ aside.event {
 	}
 
 	h5 {
-		padding-top: .5em;
+		padding-top: 0.5em;
 	}
 
 	div {
-	border: $image-border;
-	padding: $space;
+		border: $image-border;
+		padding: $space;
 
 		h5 {
 			padding-top: 0;
-			padding-bottom: .2em;
+			padding-bottom: 0.2em;
 		}
 
 		p:last-of-type {
 			margin-bottom: 0.2em;
 		}
-
 	}
 }
 
@@ -307,15 +301,15 @@ ul.people {
 	list-style: none;
 
 	figure {
-	@include aspect-ratio(10, 6);
-	background: $mid-gray;
-	background-size: cover;
+		@include aspect-ratio(10, 6);
+		background: $mid-gray;
+		background-size: cover;
 
-	.content {
-		display: flex;
+		.content {
+			display: flex;
 
-		img {
-			object-fit: cover;
+			img {
+				object-fit: cover;
 			}
 		}
 	}
@@ -324,13 +318,13 @@ ul.people {
 		width: 100%;
 
 		@include mq($from: tablet, $until: desktop) {
-			width: spanNestedGrid(12,6);
+			width: spanNestedGrid(12, 6);
 			margin-right: $gutter-nested;
 			@include resetLastColumn(2);
 		}
 
 		@include mq($from: desktop) {
-			width: spanNestedGrid(12,4);
+			width: spanNestedGrid(12, 4);
 			margin-right: $gutter-nested;
 			@include resetLastColumn(3);
 		}
@@ -345,7 +339,6 @@ ul.people {
 			}
 		}
 	}
-
 }
 
 section.video {
@@ -365,30 +358,28 @@ section.video {
 	}
 
 	.caption {
-				padding-top: 1em;
+		padding-top: 1em;
 
-			h3 {
-				padding-top: 0;
-			}
+		h3 {
+			padding-top: 0;
+		}
 	}
 
-	.video-responsive{
-	    overflow:hidden;
-	    padding-bottom:56.25%;
-	    position:relative;
-	    height:0;
+	.video-responsive {
+		overflow: hidden;
+		padding-bottom: 56.25%;
+		position: relative;
+		height: 0;
 
-		iframe{
-	    left:0;
-	    top:0;
-	    height:100%;
-	    width:100%;
-	    position:absolute;
+		iframe {
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			position: absolute;
 		}
 	}
 }
-
-
 
 section.artworks {
 	display: flex;
@@ -397,16 +388,15 @@ section.artworks {
 	flex-wrap: wrap;
 
 	.artwork {
-		width: spanNestedGrid(12,6);
+		width: spanNestedGrid(12, 6);
 		padding-bottom: $space;
 
-
-			p {
+		p {
 			margin: 0;
 		}
 
 		figure {
-			@include aspect-ratio(4,3);
+			@include aspect-ratio(4, 3);
 			display: flex;
 			margin-bottom: $space;
 
@@ -414,11 +404,11 @@ section.artworks {
 				display: flex;
 			}
 
-					img {
-				    object-fit: contain !important;
-				    object-position: left bottom;
-						cursor: pointer;
-				  }
+			img {
+				object-fit: contain !important;
+				object-position: left bottom;
+				cursor: pointer;
+			}
 		}
 
 		.artwork-meta {
@@ -432,11 +422,7 @@ section.artworks {
 					border-bottom: 1px solid $black;
 				}
 			}
-
 		}
-
-
-
 	}
 }
 
@@ -453,15 +439,15 @@ div.meta {
 
 section.map {
 	width: 100%;
-	@include space(1,'padding-top');
-	@include space(2,'padding-bottom');
+	@include space(1, "padding-top");
+	@include space(2, "padding-bottom");
 }
 
 //Fix for right aligned images on mobile-hide
 @include mq($until: tablet) {
-	.single, .page {
+	.single,
+	.page {
 		main {
-
 			h1:first-of-type {
 				order: -4;
 			}
@@ -475,10 +461,6 @@ section.map {
 			figure.right {
 				order: -1;
 			}
-
-
 		}
-
 	}
-
 }

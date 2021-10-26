@@ -59,7 +59,7 @@
 
 
 		<?php // all js scripts are loaded in library/bones.php ?>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper@6.8.4/swiper-bundle.js"></script>
     <script>
         var mySwiper = new Swiper ('.swiper-container', {
           autoHeight: true,
