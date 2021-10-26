@@ -79,22 +79,26 @@ class SKFCptActivities
 		if (!SKFCptActivities::is_activity($form_data)){
 			return $fields;
 		}
-		if (SKFCptActivities::is_max_no_people($form_data['id'], $entry['post_id'])){
+		// Add post_id to form
+		$post_field_id = SKFCptActivities::get_form_field_id($form_data, 'post_id');
+		$fields[$post_field_id]['value_raw'] = $entry['post_id'];	
+		$fields[$post_field_id]['value'] = $entry['post_id'];	
+
+		if (SKFCptActivities::is_max_no_people($form_data, $entry['post_id'])){
 			$field_id = SKFCptActivities::get_form_field_id($form_data, self::WAITING_LIST_LABEL);
 			$fields[$field_id]['value_raw'] = 'Ja';	
 			$fields[$field_id]['value'] = 'Ja';	
+			
 		}
 		return $fields;
 	}
 
 	public function pre_save($fields, $entry, $form_data)
 	{
-		debug('pre save');
 		if (!SKFCptActivities::is_activity($form_data)){
 			return true;
 		}
-		
-		if (SKFCptActivities::is_max_no_people($form_data['id'], $entry['post_id'])){
+		if (SKFCptActivities::is_max_no_people($form_data, $entry['post_id'])){
 			//wpforms()->process->errors[ $form_data['id'] ] [ 'header' ] = esc_html__( 'Tyvärr ar aktiviteten redan fullbesatt men du har registerats på väntelistan.', 'plugin-domain' );
 			debug('max_no_people to many: ');
 		}
@@ -116,12 +120,22 @@ class SKFCptActivities
 		return $message;
 	}
 	/**
-	 * @return Om aktiviteten ar full
+	 * @return Check if activity is full
 	 */
-	public static function is_max_no_people($form_id, $post_id)
+	public static function is_max_no_people($form_data, $post_id)
 	{
-		$count = wpforms()->entry->get_entries( array( 'form_id' => $form_id ), true );	
+		$entries = wpforms()->entry->get_entries(array('form_id' => $form_data['id']));	
 		$max_no_people = get_post_meta( $post_id, 'max_no_people', true);
+		$post_field_id = SKFCptActivities::get_form_field_id($form_data, 'post_id');
+		$count = 0;
+
+		foreach ($entries as $entry ){
+			$fields = json_decode($entry->fields, true);
+			if($fields and $fields[$post_field_id] and $fields[$post_field_id]['value'] == $post_id){
+				$count += 1;
+			}
+		}
+
 		if(!empty($max_no_people) and ($count+1) > $max_no_people){
 			return true;	
 		}
