@@ -11,9 +11,6 @@ require_once "library/cpts/lotteries.php";
 require_once "library/cpts/gallery.php";
 require_once "library/cpts/newsletter.php";
 
-// Sendgrid Webhook for bounced emails
-require_once "library/sendgrid/sendgrid_bounce_webhook.php";
-
 // CUSTOMIZE THE WORDPRESS ADMIN
 // require_once( 'library/admin.php' );
 
