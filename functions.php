@@ -454,8 +454,6 @@ if (function_exists("wpforms")) {
 	$member_id = is_numeric($member_form_index) ? $forms[$member_form_index]->ID : null;
 }
 */
-
-
 // Debug helper
 function debug($obj)
 {

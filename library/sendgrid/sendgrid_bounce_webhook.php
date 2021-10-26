@@ -1,13 +1,23 @@
 <?php
+/**
+ * Handles bounced emails from SendGrid. Relays bounced email addresses to the Reply-to address
+ * specifiled in settings for SKF theme. 
+ * API Endpoint https://konstforeningar.se/sendgrid/bounce (POST)
+ * @author Bébé Jane
+*/
+
 require_once( __DIR__ .'/sendgrid-php.php' );
 use SendGrid\Mail\Mail;
 
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'sendgrid', '/bounce', array(
+    'methods' => 'POST',
+    'callback' => 'bounced_email_webhook'
+  ));
+});
+
 function bounced_email_webhook(){
-	$hook_path = '/sendgridwebhook';
-	
-	if( $_SERVER['REQUEST_URI'] != $hook_path ){
-		return;
-	}
+
 	DEBUG('bounce web hook');
 	$entityBody = file_get_contents('php://input');
 	$payload = parse_payload_data($entityBody);
@@ -24,10 +34,11 @@ function bounced_email_webhook(){
 		DEBUG('success sending bounce to ' . $data['reply_to']);
 	} else {
 		DEBUG('something is wrong');
+		DEBUG($data);
+		DEBUG($payload);
 		wp_send_json( array('success' => false), 200 );
 	}	
 }
-add_action( 'init', 'bounced_email_webhook' );
 
 function get_by_sendgrid_id($sg_message_id){
 	$data = null;
@@ -75,7 +86,6 @@ function get_post_and_reply_to($sg_message_id){
 	return null;
 }
 
-
 function parse_payload_data($data) {
 	$json = json_decode($data, true);
 	DEBUG($json);
@@ -97,8 +107,8 @@ function send_bounced_email($data, $error_email){
 	$from_name = $data['from_name'];
 	$post = $data['post'];
 
-	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'". Det gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
-	$html = 'Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b>". Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b>';
+	$text = 'Det uppstod ett fel med erat senaste utskick "' . $post->post_title .'".\n\nDet gick inte att leverera meddelandet till följande e-mail adress:  ' . $error_email .'';
+	$html = '<p>Det uppstod ett fel med erat senaste utskick "<b>' . $post->post_title .'</b></p>".<p>Det gick inte att leverera meddelandet till följande e-mail adress:  <b>' . $error_email .'</b></p>';
 
 	$email = new Mail();
 	$email->setFrom(SENDGRID_EMAIL, $from_name);
