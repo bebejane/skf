@@ -35,7 +35,7 @@
       </div>
 
       <div class="last-line">
-        <p class="mid">© Konstverken på hemsidan är skyddade enligt upphovsrättslagen. <a href="/juridik">Info om GDRP & Cookies ›</a></p>
+        <p class="mid">© Konstverken på hemsidan är skyddade enligt upphovsrättslagen. <a href="/juridik">Info om GDPR & Cookies ›</a></p>
       </div>
 
       <div>

@@ -114,7 +114,7 @@ class SKFCptActivities
 		}
 		$field_id = SKFCptActivities::get_form_field_id($form_data, self::WAITING_LIST_LABEL);
 		if($fields[$field_id]['value'] == 'Ja'){
-			$message = $message . ' Tyvärr ar aktiviteten redan fullbesatt men du har registrerats på väntelistan.';
+			$message = $message . ' Tyvärr är aktiviteten redan fullbesatt men du har registrerats på väntelistan.';
 		}
 
 		return $message;
