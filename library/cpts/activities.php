@@ -47,7 +47,6 @@ class SKFCptActivities
 				'title',
 				'revisions',
 				'thumbnail',
-				'author'
 			),
 		)
 		);

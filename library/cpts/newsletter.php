@@ -50,7 +50,6 @@ class SKFCptNewsletter
 				'title',
 				'revisions',
 				'thumbnail',
-				'author'
 			),
 			)
 		);
