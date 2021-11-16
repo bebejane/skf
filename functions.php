@@ -452,7 +452,7 @@ if (function_exists("wpforms")) {
 }
 */
 // Debug helper
-function debug($obj)
+function DEBUG($obj)
 {
 	error_log(print_r($obj, true));
 }

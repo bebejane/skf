@@ -159,8 +159,10 @@ class SKFCptNewsletter
 				$bcc[$recipients[$i]] = '';
 		}
 		
-		$text = file_get_contents(get_permalink($post_id) . '?content_type=text');
-		$html = file_get_contents(get_permalink($post_id) . '?content_type=html');
+		// Get HTML content of post from url
+		$post_url = get_site_url() . '/?post_type=newsletter&p=' . $post_id . '&preview=true';
+		$text = file_get_contents($post_url . '&content_type=text');
+		$html = file_get_contents($post_url . '&content_type=html');
 
 		if(!$html){
 			$this->handle_error($post_id, 'Utskicket är tomt!');

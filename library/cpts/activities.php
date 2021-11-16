@@ -130,7 +130,7 @@ class SKFCptActivities
 
 		foreach ($entries as $entry ){
 			$fields = json_decode($entry->fields, true);
-			if($fields and $fields[$post_field_id] and $fields[$post_field_id]['value'] == $post_id){
+			if($fields and isset($fields[$post_field_id]) and $fields[$post_field_id]['value'] == $post_id){
 				$count += 1;
 			}
 		}
