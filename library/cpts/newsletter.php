@@ -3,8 +3,8 @@
 * @package default
 * @author Bébé Jane
 */
-require_once( __DIR__ .'/../sendgrid/sendgrid-php.php' );
-use SendGrid\Mail\Mail;
+require_once(__DIR__ . '/../postmark/autoload.php');
+use Postmark\PostmarkClient;
 
 class SKFCptNewsletter
 {
@@ -59,7 +59,7 @@ class SKFCptNewsletter
 	*/
 	public function register_meta()
 	{
-		register_post_meta('newsletter', 'sg_message_id', array( 
+		register_post_meta('newsletter', 'pm_message_id', array( 
 			'type' => 'string',
 			'single' => true
 		));
@@ -138,9 +138,9 @@ class SKFCptNewsletter
 		$post_id = $post->ID;
 		$from_name = 'Sveriges Konstforeningar';
 		$reply_to = get_field('newsletter_reply_to','option');
-		$sg_message_id = null;
+		$pm_message_id = null;
 		
-		if(!defined('SENDGRID_API_KEY') || !defined('SENDGRID_EMAIL')){
+		if(!defined('POSTMARK_API_KEY') || !defined('POSTMARK_EMAIL')){
 			return $this->handle_error($post_id, 'Inställningar i wordpress saknas för SendGrid!');
 		}
 		if(!$reply_to){
@@ -155,15 +155,13 @@ class SKFCptNewsletter
 
 		$bcc = array();
 		for ($i = 0; $i < count($recipients); $i++){
-			if($recipients[$i] != SENDGRID_EMAIL)
-				$bcc[$recipients[$i]] = '';
+			if($recipients[$i] != POSTMARK_EMAIL){
+				array_push($bcc, $recipients[$i]);
+			}
 		}
 		
 		// Get HTML content of post from url
 
-		$post_url = get_site_url() . '/?post_type=newsletter&p=' . $post_id . '&preview=true';
-		//$text = file_get_contents($post_url . '&content_type=text');
-		//$html = file_get_contents($post_url . '&content_type=html');
 		$text = file_get_contents(get_permalink($post_id) . '?content_type=text');
 		$html = file_get_contents(get_permalink($post_id) . '?content_type=html');
 
@@ -176,46 +174,25 @@ class SKFCptNewsletter
     	$blog = get_blog_details();
 			$from_name = $blog->blogname;
 		}
-		
-		$email = new Mail();
-		$email->setFrom(SENDGRID_EMAIL, $from_name);
-		$email->addTos([$reply_to => $from_name]);
-		$email->setReplyTo($reply_to);
-		$email->addBccs($bcc);
-		$email->setSubject($subject);
-		$email->addContent("text/plain", $text);
-		$email->addContent("text/html", $html);
-		$sendgrid = new \SendGrid(SENDGRID_API_KEY);
-		$error_message = null;
-		
+		$client = new PostmarkClient(POSTMARK_API_KEY);
+		$error_message = null;		
 		try {
-			$response = $sendgrid->send($email);
-			$body = json_decode($response->body());
-			$headers = $response->headers();
-
-			foreach ($headers as $header){
-				if(strpos($header, 'X-Message-Id', 0) !== false){
-					$sg_message_id = str_replace('X-Message-Id: ', '', $header);
-				}
-			}
-
-			if($body and $body->errors and count($body->errors) and $body->errors[0]->message){
-				$error_message = $body->errors[0]->message;
-			}
+			$response = $client->sendEmail(POSTMARK_EMAIL, $reply_to, $subject, $html, $text, null, true, $reply_to, null, implode(',', $bcc));
+			debug($response);
+			$pm_message_id = $response->MessageID;
 		} catch (Exception $e) {
 			$error_message = $e->getMessage();
 		}
-		
 		if($error_message != null){
 			$this->handle_error($post_id, $error_message);
 			return false;
 		}
-		if($sg_message_id){
-			update_post_meta($post_id, 'sg_message_id', $sg_message_id);
+		if($pm_message_id){
+			update_post_meta($post_id, 'pm_message_id', $pm_message_id);
 		}
 
-		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . SENDGRID_EMAIL);
-		DEBUG('SendGridID: ' . $sg_message_id);
+		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . POSTMARK_EMAIL);
+		DEBUG('PostMarkID: ' . $pm_message_id);
 		DEBUG('Recipients');
 		DEBUG($recipients);
 		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' ' . (count($bcc) == 1 ? 'medlem' : 'medlemmar'));
