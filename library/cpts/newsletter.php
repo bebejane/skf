@@ -177,13 +177,12 @@ class SKFCptNewsletter
 		$client = new PostmarkClient(POSTMARK_API_KEY);
 		$error_message = null;
 
-		$chunk_recipients = array_chunk($bcc, 1);
+		$chunk_recipients = array_chunk($bcc, 50);
 		$pm_message_ids = array();
 
 		try {
 
 			for ($i = 0; $i < count($chunk_recipients); $i++) { 
-				DEBUG($chunk_recipients[$i]);
 				$response = $client->sendEmail(POSTMARK_EMAIL, $reply_to, $subject, $html, $text, null, true, $reply_to, null, implode(',', $chunk_recipients[$i]));
 				array_push($pm_message_ids, $response->MessageID);
 			}
