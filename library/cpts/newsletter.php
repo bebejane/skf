@@ -59,8 +59,8 @@ class SKFCptNewsletter
 	*/
 	public function register_meta()
 	{
-		register_post_meta('newsletter', 'pm_message_id', array( 
-			'type' => 'string',
+		register_post_meta('newsletter', 'pm_message_ids', array( 
+			'type'  => 'array',
 			'single' => true
 		));
 	}
@@ -175,11 +175,19 @@ class SKFCptNewsletter
 			$from_name = $blog->blogname;
 		}
 		$client = new PostmarkClient(POSTMARK_API_KEY);
-		$error_message = null;		
+		$error_message = null;
+
+		$chunk_recipients = array_chunk($bcc, 1);
+		$pm_message_ids = array();
+
 		try {
-			$response = $client->sendEmail(POSTMARK_EMAIL, $reply_to, $subject, $html, $text, null, true, $reply_to, null, implode(',', $bcc));
-			debug($response);
-			$pm_message_id = $response->MessageID;
+
+			for ($i = 0; $i < count($chunk_recipients); $i++) { 
+				DEBUG($chunk_recipients[$i]);
+				$response = $client->sendEmail(POSTMARK_EMAIL, $reply_to, $subject, $html, $text, null, true, $reply_to, null, implode(',', $chunk_recipients[$i]));
+				array_push($pm_message_ids, $response->MessageID);
+			}
+
 		} catch (Exception $e) {
 			$error_message = $e->getMessage();
 		}
@@ -187,14 +195,14 @@ class SKFCptNewsletter
 			$this->handle_error($post_id, $error_message);
 			return false;
 		}
-		if($pm_message_id){
-			update_post_meta($post_id, 'pm_message_id', $pm_message_id);
+		if(count($pm_message_ids) > 0){
+			update_post_meta($post_id, 'pm_message_ids', $pm_message_ids);
 		}
 
 		DEBUG('Sent newssletter. From: ' . $from_name . ' ' . POSTMARK_EMAIL);
-		DEBUG('PostMarkID: ' . $pm_message_id);
-		DEBUG('Recipients');
-		DEBUG($recipients);
+		DEBUG('PostMarkIDs');
+		DEBUG($pm_message_ids);
+		
 		$this->send_notice('success', 'Utskick skickades till ' . count($bcc) . ' ' . (count($bcc) == 1 ? 'medlem' : 'medlemmar'));
 		return true;
 	}
