@@ -174,10 +174,11 @@ class SKFCptNewsletter
     	$blog = get_blog_details();
 			$from_name = $blog->blogname;
 		}
+
 		$client = new PostmarkClient(POSTMARK_API_KEY);
 		$error_message = null;
 
-		$chunk_recipients = array_chunk($bcc, 50);
+		$chunk_recipients = array_chunk($bcc, 49); // Max 50 recipents with postmark
 		$pm_message_ids = array();
 
 		try {
