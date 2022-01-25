@@ -123,13 +123,13 @@ class SKFCptActivities
 	 */
 	public static function is_max_no_people($form_data, $post_id)
 	{
-		$entries = wpforms()->entry->get_entries(array('form_id' => $form_data['id']));	
+		$entries = wpforms()->entry->get_entries(array('form_id' => $form_data['id'], 'number' => 10000));	
 		$max_no_people = get_post_meta( $post_id, 'max_no_people', true);
 		$post_field_id = SKFCptActivities::get_form_field_id($form_data, 'post_id');
 		$count = 0;
 
 		foreach ($entries as $entry ){
-			$fields = json_decode($entry->fields, true);
+			$fields = json_decode($entry->fields, true);	
 			if($fields and isset($fields[$post_field_id]) and $fields[$post_field_id]['value'] == $post_id){
 				$count += 1;
 			}
