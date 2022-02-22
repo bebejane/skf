@@ -75,6 +75,7 @@ class SKFCptActivities
 	 */
 	public function pre_filter($fields, $entry, $form_data)
 	{	
+		
 		if (!SKFCptActivities::is_activity($form_data)){
 			return $fields;
 		}
@@ -87,19 +88,31 @@ class SKFCptActivities
 			$field_id = SKFCptActivities::get_form_field_id($form_data, self::WAITING_LIST_LABEL);
 			$fields[$field_id]['value_raw'] = 'Ja';	
 			$fields[$field_id]['value'] = 'Ja';	
-			
+			debug('activities: put on waitinglist' );
+			debug($entry);
 		}
+		
 		return $fields;
 	}
 
 	public function pre_save($fields, $entry, $form_data)
 	{
+		debug('activities: pre_save');
+		$email = SKFCptActivities::get_form_field_value($fields, 'Epost');
+		$email_field_id = SKFCptActivities::get_form_field_id($form_data, 'Epost');
+		
 		if (!SKFCptActivities::is_activity($form_data)){
+			debug('activities: pre_save - is not activity');
 			return true;
 		}
-		if (SKFCptActivities::is_max_no_people($form_data, $entry['post_id'])){
-			//wpforms()->process->errors[ $form_data['id'] ] [ 'header' ] = esc_html__( 'Tyvärr ar aktiviteten redan fullbesatt men du har registerats på väntelistan.', 'plugin-domain' );
-			debug('max_no_people to many: ');
+		if (SKFCptActivities::is_registered($form_data, $entry['post_id'], $email)){
+			debug('activities: already registered ' . $email);
+			wpforms()->process->errors[$form_data['id']][$email_field_id] = 'E-post adressen är redan registerad för den här aktiviteten';
+			return false;
+		}
+		
+		if (SKFCptActivities::is_max_no_people($form_data, $entry['post_id'])){			
+			debug('activities: max_no_people');
 		}
 		return true;  
 	}
@@ -108,12 +121,17 @@ class SKFCptActivities
 	 */
 	public function pre_confirm($message, $form_data, $fields, $entry_id )
 	{
+
 		if (!SKFCptActivities::is_activity($form_data)){
 			return $message;
 		}
+		
 		$field_id = SKFCptActivities::get_form_field_id($form_data, self::WAITING_LIST_LABEL);
 		if($fields[$field_id]['value'] == 'Ja'){
 			$message = $message . ' Tyvärr är aktiviteten redan fullbesatt men du har registrerats på väntelistan.';
+			debug('activities: activity is full');
+			debug($field_id);
+			debug($form_data);
 		}
 
 		return $message;
@@ -141,6 +159,24 @@ class SKFCptActivities
 		return false;  		
 	}
 	/**
+	 * @return Check if user already registered
+	 */
+	public static function is_registered($form_data, $post_id, $email)
+	{
+		$entries = wpforms()->entry->get_entries(array('form_id' => $form_data['id'], 'number' => 10000));
+		$post_field_id = SKFCptActivities::get_form_field_id($form_data, 'post_id');
+		$email_field_id = SKFCptActivities::get_form_field_id($form_data, 'Epost');
+		$count = 0;
+		
+		foreach ($entries as $entry ){
+			$fields = json_decode($entry->fields, true);
+			if($fields and isset($fields[$post_field_id]) and $fields[$post_field_id]['value'] == $post_id and $fields[$email_field_id]['value'] == $email){
+				return true;
+			}
+		}
+		return false;  		
+	}
+	/**
 	 * @return Om formularat ar aktivitets formular
 	 */
 	public static function is_activity($form_data)
@@ -162,6 +198,19 @@ class SKFCptActivities
 			}
 			return false;
 		}));
+	}
+
+	/**
+	 * @return value from entries
+	 */
+	public static function get_form_field_value($fields, $name)
+	{
+		foreach ($fields as $field ){
+			if($field['name'] == $name){
+				return $field['value'];
+			}
+		}
+		return null;
 	}
 }
 
