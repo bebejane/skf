@@ -105,12 +105,13 @@ class SKFCptActivities
 			debug('activities: pre_save - is not activity');
 			return true;
 		}
+		/* Disable check
 		if (SKFCptActivities::is_registered($form_data, $entry['post_id'], $email)){
 			debug('activities: already registered ' . $email);
 			wpforms()->process->errors[$form_data['id']][$email_field_id] = 'E-post adressen är redan registerad för den här aktiviteten';
 			return false;
 		}
-		
+		*/
 		if (SKFCptActivities::is_max_no_people($form_data, $entry['post_id'])){			
 			debug('activities: max_no_people');
 		}
