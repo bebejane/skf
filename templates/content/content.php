@@ -12,7 +12,7 @@ if( get_field('alt_headline') ) {
 <div class="left">
 <?php
 
-  if(get_field('has_gallery') && ( count( get_field('gallery')) > 1 )) {
+  if(get_field('has_gallery') && get_field('gallery') && count(get_field('gallery')) > 1 ) {
     get_template_part( 'templates/content/content-gallery' );
   }
   else if( get_the_post_thumbnail()) {

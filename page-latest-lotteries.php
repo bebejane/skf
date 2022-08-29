@@ -48,7 +48,7 @@ if( $posts ) { ?>
   $amountOfPosts = 3;
   $postCounter = 0;
   $posts = get_posts(array(
-  'post_type'	  => 'lotteries',
+  'post_type'      => 'lotteries',
   'posts_per_page' => $amountOfPosts,
   'order'          => 'DESC',
   'orderby'        => 'meta_value',
@@ -60,14 +60,13 @@ if( $posts ) { ?>
       'compare'	=> '<',
       'value'		=> $today,
     )
-  )
-)
-);
+  )));
+?>
 
-if( $posts ) { ?>
+<?php if( $posts ) { ?>
   <h1 class="section-color">Tidigare utlottningar</h1>
   <section class="thumbs">
-    <?php
+  <?php
     foreach( $posts as $post ) {
       setup_postdata( $post );
       include( locate_template( 'templates/overview/thumb.php', false, false ) );
@@ -82,10 +81,10 @@ if( $posts ) { ?>
       <?php
       }
     }
-    wp_reset_postdata(); ?>
+    wp_reset_postdata(); 
+  ?>
   </section>
-  <?
-  }
-?>
+
+<?php } ?>
 
 <?php get_footer(); ?>
